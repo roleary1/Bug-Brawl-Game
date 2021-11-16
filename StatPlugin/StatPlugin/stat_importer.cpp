@@ -3,7 +3,6 @@
 using namespace statimporter;
 
 void STAT_IMPORTER::import_file(String fileName) {
-	ifstream inFile;
 	inFile.open(fileName);
 
 	if (!inFile) {
@@ -17,4 +16,12 @@ void STAT_IMPORTER::import_file(String fileName) {
 
 
 	inFile.close()
+}
+
+void STAT_IMPORTER::update_stats() {
+	
+}
+
+void STAT_IMPORTER::create_player() {
+
 }
