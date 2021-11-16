@@ -2,9 +2,13 @@
 #ifndef STAT_IMPORTER_H
 #define STAT_IMPORTER_H
 
+#include <fstream>
+
+using namespace std;
+
 namespace statimporter
 {
-    class stat_importer {
+    class STAT_IMPORTER {
     private:    
         
 
