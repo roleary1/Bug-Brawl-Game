@@ -1,0 +1,7 @@
+HP:190
+ATK:48
+DEF:65
+SPD:43
+TYPE:1
+Basic Attack,Tackle:40:100,Tail Whip:45:85,Shell Spin:47:65
+Special Attack,Brine:45:100,Waterfall:48:80,Hydro Pump:52:50

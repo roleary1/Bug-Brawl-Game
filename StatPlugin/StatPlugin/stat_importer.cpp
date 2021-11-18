@@ -72,7 +72,7 @@ void STAT_IMPORTER::create_player() {
 int main(int argc, char *argv[]) {
 	STAT_IMPORTER stat_imp;
 	
-	stat_imp.read_stats("../Squirtle.txt");
+	stat_imp.read_stats("Squirtle.txt");
 	//print stats
 	for (auto it = stat_imp.stats.begin(); it != stat_imp.stats.end(); ++it)
 		std::cout << it->first << " => " << it->second << '\n';
