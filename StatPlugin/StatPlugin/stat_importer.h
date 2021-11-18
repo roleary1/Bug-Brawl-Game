@@ -3,6 +3,10 @@
 #define STAT_IMPORTER_H
 
 #include <fstream>
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <map>
 
 using namespace std;
 
@@ -11,12 +15,15 @@ namespace statimporter
     class STAT_IMPORTER {
     private:    
         ifstream inFile;
-        String[] stats;
 
     public:
-        void import_file(String fileName); //sets the inFile to read
+        // put these as private later
+        map<string, int> stats;
+        map<std::string, map<std::string, vector<int>>> attacks_list;
 
-        void update_stats();    //parses inFile and reads stat fields
+        void read_stats(string fileName); //reads stats from inFile
+
+        vector<string> split(string s, string delimiter); //splits string on delimiter
 
         void create_player();   //sends stat information to new player/enemy object
     
