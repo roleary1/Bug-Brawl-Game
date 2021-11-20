@@ -1,0 +1,7 @@
+HP:180
+ATK:52
+DEF:43
+SPD:50
+TYPE:Fire
+Basic Attack,Scratch:40:100,Slash:45:80,Mega Punch:50:65
+Special Attack,Ember:40:100,Fire Fang:45,85:Flamethrower:48:70
