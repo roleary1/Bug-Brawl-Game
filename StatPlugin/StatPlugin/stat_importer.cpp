@@ -3,17 +3,17 @@
 using namespace std;
 
 extern "C" {
-	void read_stats(std::list<std::string> statKeys, std::list<int> statValues, std::list<std::string> attackKeys,
-		std::list<int> attackDmg, std::list<int> attackAccuracy, std::string fileName) {
+	void read_stats(list<const char*> statKeys, list<int> statValues, list<const char*> attackKeys,
+		list<int> attackDmg, list<int> attackAccuracy, const char* fileName) {
 		ifstream inFile;
 
 		// map<string, int> stats;
         // map<std::string, map<std::string, vector<int>>> attacks_list;
 		
-		inFile.open(fileName);
+		inFile.open(std::string(fileName));
 
 		if (!inFile) {
-			cerr << ("Unable to open file " + fileName);
+			cerr << ("Unable to open file " + std::string(fileName));
 			return;
 		}
 
@@ -28,8 +28,8 @@ extern "C" {
 				
 				for (string attack : attacks) {
 					vector<string> values = split(attack, ":");
-			
-					attackKeys.push_back(values[0]);
+					// attackKeys are the names of the attacks
+					attackKeys.push_back(const_cast<char*>(values[0].c_str()));
 					attackDmg.push_back(stoi(values[1]));
 					attackAccuracy.push_back(stoi(values[2])); // NOTE: first 3 items are basic attacks, next 3 are special
 				}
@@ -40,7 +40,7 @@ extern "C" {
 				string field = nextLine.substr(0, nextLine.find(delim));
 				string value = nextLine.substr(nextLine.find(delim) + 1, nextLine.length());
 
-				statKeys.push_back(field);
+				statKeys.push_back(const_cast<char*>(field.c_str()));
 				statValues.push_back(stoi(value));
 			}
 		}
