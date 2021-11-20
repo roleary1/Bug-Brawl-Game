@@ -3,7 +3,8 @@
 using namespace std;
 
 extern "C" {
-	void read_stats(map<string, int> stats, map<std::string, map<std::string, vector<int>>> attacks_list, std::string fileName) {
+	void read_stats(std::list<std::string> statKeys, std::list<int> statValues, std::list<std::string> attackKeys,
+		std::list<int> attackDmg, std::list<int> attackAccuracy, std::string fileName) {
 		ifstream inFile;
 
 		// map<string, int> stats;
@@ -24,18 +25,13 @@ extern "C" {
 				vector<string> attacks = split(nextLine, delim);
 				string attack_type = attacks[0];
 				attacks.erase(attacks.begin());
-
-				map<string, vector<int>> initmap;
-				// attacks_list.insert(attack_type,initmap);
-				attacks_list[attack_type] = initmap;
+				
 				for (string attack : attacks) {
 					vector<string> values = split(attack, ":");
-					vector<int> dmgs;
-					dmgs.push_back(stoi(values[1]));
-					dmgs.push_back(stoi(values[2]));
-					// attacks_list.get(attack_type).insert(values[0],dmgs);
-
-					attacks_list[attack_type][values[0]] = dmgs;
+			
+					attackKeys.push_back(values[0]);
+					attackDmg.push_back(stoi(values[1]));
+					attackAccuracy.push_back(stoi(values[2])); // NOTE: first 3 items are basic attacks, next 3 are special
 				}
 			}
 
@@ -44,7 +40,8 @@ extern "C" {
 				string field = nextLine.substr(0, nextLine.find(delim));
 				string value = nextLine.substr(nextLine.find(delim) + 1, nextLine.length());
 
-				stats[field] = stoi(value);
+				statKeys.push_back(field);
+				statValues.push_back(stoi(value));
 			}
 		}
 		inFile.close();
