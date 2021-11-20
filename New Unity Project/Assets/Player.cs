@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     Dictionary<string, int> statsMap = new Dictionary<string, int>();
     Dictionary<string, Dictionary<string, List<int>>> attacksMap = new Dictionary<string, Dictionary<string, List<int>>>();
 
-    [DllImport("Player", EntryPoint = "read_stats")]
+    [DllImport("StatPlugin", EntryPoint = "read_stats")]
     public static extern void read_stats(List<string> statKeys, List<int> statValues, List<string> attackKeys,
 		List<int> attackDmg, List<int> attackAccuracy, string fileName);
 
@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
 
         //fill statsMap
         for(int i = 0; i < statKeys.Count; i++) {
+            Debug.Log("Adding stat: " + statKeys[i] + " With value: " + statValues[i]);
             statsMap.Add(statKeys[i], statValues[i]);
         }
 
@@ -36,8 +37,10 @@ public class Player : MonoBehaviour
             attackVals.Add(attackDmg[i]);
             attackVals.Add(attackAccuracy[i]);
             if(i < 3) {
+                Debug.Log("Adding Basic attack: " + attackKeys[i] + " With values: " + attackVals[0] + " " + attackVals[1]);
                 attacksMap["BasicAttack"].Add(attackKeys[i], attackVals);
             } else {
+                Debug.Log("Adding Special attack: " + attackKeys[i] + " With values: " + attackVals[0] + " " + attackVals[1]);
                 attacksMap["SpecialAttack"].Add(attackKeys[i], attackVals);
             }
         }
