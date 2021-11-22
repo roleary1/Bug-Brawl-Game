@@ -1,7 +1,0 @@
-HP:195
-ATK:49
-DEF:49
-SPD:45
-TYPE:Grass
-Tackle:40:100,Take Down:45:85,Double-Edge:47:65
-Vine Whip:45:100,Razor Leaf:48:80,Seed Bomb:50:65

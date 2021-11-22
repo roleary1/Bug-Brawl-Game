@@ -1,7 +1,0 @@
-HP:190
-ATK:48
-DEF:65
-SPD:43
-TYPE:Water
-Tackle:40:100,Tail Whip:45:85,Shell Spin::47:65
-Brine:45:100,Waterfall:48:80,Hydro Pump:52:50

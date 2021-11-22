@@ -1,0 +1,13 @@
+{
+  "HP": 195,
+  "ATK": 49,
+  "DEF": 49,
+  "SPD": 45,
+  "TYPE": "Grass",
+  "basicAttackNames": ["Tackle","Take Down", "Double-Edge"],
+  "basicAttackDMG": [40,45,47],
+  "basicAttackACC": [100,85,65],
+  "specialAttackNames": ["Vine Whip", "Razor Leaf",  "Seed Bomb"],
+  "specialAttackDMG": [45,48,50],
+  "specialAttackACC": [100,80,65]
+}
