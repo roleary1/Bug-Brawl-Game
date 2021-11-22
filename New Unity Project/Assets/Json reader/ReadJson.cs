@@ -7,6 +7,7 @@ public class ReadJson : MonoBehaviour
 {
     void Start()
     {
+        Debug.Log("HI");
         LoadJson();
     }
 
@@ -20,7 +21,7 @@ public class ReadJson : MonoBehaviour
     {
         // TODO: replace name with character selected
         string name = "Squirtle";
-        using (StreamReader r = new StreamReader(name + ".json"))
+        using (StreamReader r = new StreamReader("Assets/Characters/Squirtle.json"))
         {
             string json = r.ReadToEnd();
             Character character = JsonUtility.FromJson<Character>(json);
