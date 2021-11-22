@@ -1,0 +1,13 @@
+{
+  "HP": 190,
+  "ATK": 50,
+  "DEF": 47,
+  "SPD": 48,
+  "TYPE": "Fairy",
+  "basicAttackNames": ["Pound","Body Slam", "Round"],
+  "basicAttackDMG": [41,45,46],
+  "basicAttackACC": [100,82,69],
+  "specialAttackNames": ["Sweet Kiss", "Charm",  "Dazzling Gleam"],
+  "specialAttackDMG": [43,46,49],
+  "specialAttackACC": [100,80,65]
+}
