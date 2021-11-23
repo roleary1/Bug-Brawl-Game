@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CharacterSelectScreen : MonoBehaviour
 {
 
-    public Button squirtle_button, charmander_button, bulbasaur_button, pikachu_button, jiggly_button;
+    public Button squirtle_button, charmander_button, bulbasaur_button, pikachu_button, jiggly_button, battle_button;
     public ReadJson jsonReader;
     //public ReadJson.Character chosenChar;
     public Image player1;
@@ -21,6 +22,8 @@ public class CharacterSelectScreen : MonoBehaviour
         bulbasaur_button.onClick.AddListener(delegate { selectCharacter("bulbasaur"); });
         pikachu_button.onClick.AddListener(delegate { selectCharacter("pikachu"); });
         jiggly_button.onClick.AddListener(delegate { selectCharacter("jigglypuff"); });
+        battle_button.onClick.AddListener(enterBattle);
+
     }
 
     // Update is called once per frame
@@ -28,6 +31,11 @@ public class CharacterSelectScreen : MonoBehaviour
     {
         
     }
+    
+    void enterBattle()
+    {
+        SceneManager.LoadScene("BattleScene");
+    } 
 
     void selectCharacter(string characterName)
     {
