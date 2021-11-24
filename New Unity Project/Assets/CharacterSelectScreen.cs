@@ -11,8 +11,11 @@ public class CharacterSelectScreen : MonoBehaviour
     public ReadJson jsonReader;
     //public ReadJson.Character chosenChar;
     public Image player1;
-
+    public Player playerObj;
     public Text statWindow;
+
+    public string charName;
+    public ReadJson.Character chosenChar;
 
     // Start is called before the first frame update
     void Start()
@@ -34,14 +37,19 @@ public class CharacterSelectScreen : MonoBehaviour
     
     void enterBattle()
     {
+        // Set up the player stats before transitioning
+        //playerObj = new Player();
+        playerObj.initializeStats(charName, chosenChar);
         SceneManager.LoadScene("BattleScene");
     } 
 
     void selectCharacter(string characterName)
     {
-        Debug.Log(characterName);
+        charName = characterName;
+        
+
         jsonReader = new ReadJson();
-        ReadJson.Character chosenChar = jsonReader.LoadJson(characterName);
+        chosenChar = jsonReader.LoadJson(characterName);
         player1.sprite = Resources.Load <Sprite> (characterName);
 
         string statsToDisplay = "" + char.ToUpper(characterName[0]) + characterName.Substring(1) + " Stats: \n" +
