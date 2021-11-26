@@ -1317,6 +1317,9 @@ MonoBehaviour:
   healItems: 5
   defBoostItems: 5
   atkBoostItems: 5
+  accuracyBoostItems: 3
+  evasiveBoostItems: 3
+  critRateBoostItems: 3
   gameStart: 0
 --- !u!4 &1147362522
 Transform:
@@ -1815,6 +1818,71 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1785965867}
   m_CullTransparentMesh: 1
+--- !u!1 &1838615392
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1838615393}
+  - component: {fileID: 1838615394}
+  m_Layer: 0
+  m_Name: Enemy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1838615393
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1838615392}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1838615394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1838615392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b94285d31cfce45b487bfe036d35d6c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: 
+  HP: 0
+  ATK: 0
+  DEF: 0
+  SPD: 0
+  TYPE: 
+  basicAttackNames: []
+  basicAttackDMG: 
+  basicAttackACC: 
+  specialAttackNames: []
+  specialAttackDMG: 
+  specialAttackACC: 
+  playerHPDisplay: {fileID: 0}
+  healItems: 2
+  defBoostItems: 3
+  atkBoostItems: 2
+  accuracyBoostItems: 3
+  evasiveBoostItems: 3
+  critRateBoostItems: 3
+  gameStart: 0
+  opponentType: 
 --- !u!1 &1849119358
 GameObject:
   m_ObjectHideFlags: 0
@@ -2103,6 +2171,7 @@ MonoBehaviour:
   battle_button: {fileID: 1109608877}
   player1: {fileID: 113860345}
   playerObj: {fileID: 1147362521}
+  enemyObj: {fileID: 1838615394}
   statWindow: {fileID: 1994120508}
   charName: 
   chosenChar:
@@ -2334,7 +2403,7 @@ GameObject:
   - component: {fileID: 2120258303}
   - component: {fileID: 2120258302}
   m_Layer: 0
-  m_Name: EventSystem
+  m_Name: EventSystemMain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

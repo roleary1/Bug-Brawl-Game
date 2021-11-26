@@ -9,9 +9,9 @@ public class CharacterSelectScreen : MonoBehaviour
 
     public Button squirtle_button, charmander_button, bulbasaur_button, pikachu_button, jiggly_button, battle_button;
     public ReadJson jsonReader;
-    //public ReadJson.Character chosenChar;
     public Image player1;
     public Player playerObj;
+    public AI enemyObj;
     public Text statWindow;
 
     public string charName;
@@ -40,6 +40,7 @@ public class CharacterSelectScreen : MonoBehaviour
         // Set up the player stats before transitioning
         //playerObj = new Player();
         playerObj.initializeStats(charName, chosenChar);
+        enemyObj.setUpAI(playerObj.TYPE);
         SceneManager.LoadScene("BattleScene");
     } 
 

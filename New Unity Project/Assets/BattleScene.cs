@@ -9,11 +9,16 @@ public class BattleScene : MonoBehaviour
 
     public Button basicAttack1, basicAttack2, basicAttack3, specialAttack1, specialAttack2, specialAttack3;
     public Button attackWindowButton, itemWindowButton;
+
+    public Button item1, item2, item3, item4, item5, item6;
+
     public Image attackWindow, itemWindow;
     public Text playerHP;
     public Text enemyHP;
 
     public Player player;
+
+    public AI enemy;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +32,17 @@ public class BattleScene : MonoBehaviour
         } else {
             Debug.Log("Player game obj was null");
         }
+
+        GameObject enemyGameObj = GameObject.Find("Enemy");
+        if (enemyGameObj != null) {
+            enemy = enemyGameObj.GetComponent<AI>();
+            Debug.Log("Enemy name is: " + enemy.name);
+            Debug.Log("ATK: "+ enemy.ATK);
+            Debug.Log("HP: "+ enemy.HP);
+        } else {
+            Debug.Log("Enemy game obj was null");
+        }
+
         
         basicAttack1.onClick.AddListener(delegate { executeAttack(1); });
         basicAttack2.onClick.AddListener(delegate { executeAttack(2); });
@@ -38,6 +54,13 @@ public class BattleScene : MonoBehaviour
 
         attackWindowButton.onClick.AddListener(delegate { changeTab("attack"); });
         itemWindowButton.onClick.AddListener(delegate { changeTab("items"); });
+
+        item1.onClick.AddListener(delegate { useItem(1); });
+        item2.onClick.AddListener(delegate { useItem(2); });
+        item3.onClick.AddListener(delegate { useItem(3); });
+        item4.onClick.AddListener(delegate { useItem(4); });
+        item5.onClick.AddListener(delegate { useItem(5); });
+        item6.onClick.AddListener(delegate { useItem(6); });
     }
 
     // Update is called once per frame
@@ -49,6 +72,25 @@ public class BattleScene : MonoBehaviour
     void executeAttack(int attack) {
         switch(attack) {
             case 1:
+                Debug.Log("Basic Attack 1");
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+        }
+    }
+
+    void useItem(int item) {
+        switch(item) {
+            case 1:
+                Debug.Log("Item 1");
                 break;
             case 2:
                 break;
@@ -65,7 +107,7 @@ public class BattleScene : MonoBehaviour
 
 
     void changeTab(string tab) {
-        Debug.log(tab);
+        Debug.Log(tab);
         if(tab == "attack") {
             for (int i = 0; i < itemWindow.transform.childCount; i++){
                 itemWindow.transform.GetChild(i).gameObject.SetActive(false);

@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-
     public string name;
     public int HP;
     public int ATK;
@@ -19,9 +18,18 @@ public class Player : MonoBehaviour
     public List<int> specialAttackDMG;
     public List<int> specialAttackACC;
     public Text playerHPDisplay;
-    public int healItems = 5;
-    public int defBoostItems = 5;
-    public int atkBoostItems = 5;
+    // Heal 50, if below 25% health add extra 20
+    public int healItems = 2;
+    // Increase DEF by 25
+    public int defBoostItems = 3;
+    // Increase ATK by 20
+    public int atkBoostItems = 2;
+    // Increase Accuracy of next attack by 10%
+    public int accuracyBoostItems = 3;
+    // Increase SPD by 10
+    public int evasiveBoostItems = 3;
+    // Increase crit rate by 5%
+    public int critRateBoostItems = 3;
 
     public bool gameStart = false;
 
