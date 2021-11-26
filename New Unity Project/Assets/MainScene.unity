@@ -500,7 +500,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 628115138}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &628115140
 Camera:
   m_ObjectHideFlags: 0
@@ -1314,6 +1314,10 @@ MonoBehaviour:
   specialAttackDMG: 
   specialAttackACC: 
   playerHPDisplay: {fileID: 0}
+  healItems: 5
+  defBoostItems: 5
+  atkBoostItems: 5
+  gameStart: 0
 --- !u!4 &1147362522
 Transform:
   m_ObjectHideFlags: 0

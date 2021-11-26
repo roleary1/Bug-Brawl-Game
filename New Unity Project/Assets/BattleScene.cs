@@ -8,6 +8,8 @@ public class BattleScene : MonoBehaviour
 {
 
     public Button basicAttack1, basicAttack2, basicAttack3, specialAttack1, specialAttack2, specialAttack3;
+    public Button attackWindowButton, itemWindowButton;
+    public Image attackWindow, itemWindow;
     public Text playerHP;
     public Text enemyHP;
 
@@ -20,6 +22,8 @@ public class BattleScene : MonoBehaviour
         if (playerGameObj != null) {
             player = playerGameObj.GetComponent<Player>();
             Debug.Log("Player name is: " + player.name);
+            Debug.Log("ATK: "+ player.ATK);
+            Debug.Log("HP: "+ player.HP);
         } else {
             Debug.Log("Player game obj was null");
         }
@@ -31,6 +35,9 @@ public class BattleScene : MonoBehaviour
         specialAttack2.onClick.AddListener(delegate { executeAttack(5); });
         specialAttack3.onClick.AddListener(delegate { executeAttack(6); });
 
+
+        attackWindowButton.onClick.AddListener(delegate { changeTab("attack"); });
+        itemWindowButton.onClick.AddListener(delegate { changeTab("items"); });
     }
 
     // Update is called once per frame
@@ -55,5 +62,28 @@ public class BattleScene : MonoBehaviour
                 break;
         }
     }
-    
+
+
+    void changeTab(string tab) {
+        Debug.log(tab);
+        if(tab == "attack") {
+            for (int i = 0; i < itemWindow.transform.childCount; i++){
+                itemWindow.transform.GetChild(i).gameObject.SetActive(false);
+            }
+            itemWindow.enabled = false;
+            for (int i = 0; i < attackWindow.transform.childCount; i++){
+                attackWindow.transform.GetChild(i).gameObject.SetActive(true);
+            }
+            attackWindow.enabled = true;
+        } else {
+            for (int i = 0; i < attackWindow.transform.childCount; i++){
+                attackWindow.transform.GetChild(i).gameObject.SetActive(false);
+            }
+            attackWindow.enabled = false;
+            for (int i = 0; i < itemWindow.transform.childCount; i++){
+                itemWindow.transform.GetChild(i).gameObject.SetActive(true);
+            }
+            itemWindow.enabled = true;
+        }
+    }
 }

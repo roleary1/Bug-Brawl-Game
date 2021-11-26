@@ -18,8 +18,12 @@ public class Player : MonoBehaviour
     public List<string> specialAttackNames;
     public List<int> specialAttackDMG;
     public List<int> specialAttackACC;
-
     public Text playerHPDisplay;
+    public int healItems = 5;
+    public int defBoostItems = 5;
+    public int atkBoostItems = 5;
+
+    public bool gameStart = false;
 
     // Start is called before the first frame update
     void Start()
@@ -34,12 +38,16 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(playerHPDisplay != null) {
-            playerHPDisplay.text = "" + HP;
+        if(gameStart) {
+            if(playerHPDisplay != null) {
+                playerHPDisplay.text = "" + HP;
+            }
         }
     }
 
     public void initializeStats(string playerName, ReadJson.Character charStats) {
+        this.gameStart = true;
+        
         this.name = playerName;
         this.HP = charStats.HP;
         this.ATK = charStats.ATK;
