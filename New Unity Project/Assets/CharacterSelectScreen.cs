@@ -13,7 +13,6 @@ public class CharacterSelectScreen : MonoBehaviour
     public Player playerObj;
     public AI enemyObj;
     public Text statWindow;
-
     public string charName;
     public ReadJson.Character chosenChar;
 

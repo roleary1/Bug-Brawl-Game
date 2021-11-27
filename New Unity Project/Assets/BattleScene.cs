@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,10 @@ public class BattleScene : MonoBehaviour
     public Player player;
 
     public AI enemy;
+
+    public bool usedItem = false;
+    public bool accBoost = false;
+    public bool critBoost = false;
 
     // Start is called before the first frame update
     void Start()
@@ -44,63 +49,131 @@ public class BattleScene : MonoBehaviour
         }
 
         
-        basicAttack1.onClick.AddListener(delegate { executeAttack(1); });
-        basicAttack2.onClick.AddListener(delegate { executeAttack(2); });
-        basicAttack3.onClick.AddListener(delegate { executeAttack(3); });
-        specialAttack1.onClick.AddListener(delegate { executeAttack(4); });
-        specialAttack2.onClick.AddListener(delegate { executeAttack(5); });
-        specialAttack3.onClick.AddListener(delegate { executeAttack(6); });
+        basicAttack1.onClick.AddListener(delegate { executeAttack(0); });
+        basicAttack2.onClick.AddListener(delegate { executeAttack(1); });
+        basicAttack3.onClick.AddListener(delegate { executeAttack(2); });
+        specialAttack1.onClick.AddListener(delegate { executeAttack(3); });
+        specialAttack2.onClick.AddListener(delegate { executeAttack(4); });
+        specialAttack3.onClick.AddListener(delegate { executeAttack(5); });
 
 
         attackWindowButton.onClick.AddListener(delegate { changeTab("attack"); });
         itemWindowButton.onClick.AddListener(delegate { changeTab("items"); });
 
-        item1.onClick.AddListener(delegate { useItem(1); });
-        item2.onClick.AddListener(delegate { useItem(2); });
-        item3.onClick.AddListener(delegate { useItem(3); });
-        item4.onClick.AddListener(delegate { useItem(4); });
-        item5.onClick.AddListener(delegate { useItem(5); });
-        item6.onClick.AddListener(delegate { useItem(6); });
+        item1.onClick.AddListener(delegate { useItem(0); });
+        item2.onClick.AddListener(delegate { useItem(1); });
+        item3.onClick.AddListener(delegate { useItem(2); });
+        item4.onClick.AddListener(delegate { useItem(3); });
+        item5.onClick.AddListener(delegate { useItem(4); });
+        item6.onClick.AddListener(delegate { useItem(5); });
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void Update() {
+
     }
 
     void executeAttack(int attack) {
-        switch(attack) {
-            case 1:
-                Debug.Log("Basic Attack 1");
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-            case 5:
-                break;
-            case 6:
-                break;
+        // get dmg from attack selected
+        // apply dmg to AI
+        // check if AI died
+        // get AI response
+        // apply AI dmg to player
+        // check if we died
+        // reset the AI and player stats to base stats, reset usedItem
+        int totalDmg = 0;
+        if(attack < 3) {
+            Debug.Log("Basic Attack " + attack);
+            int newAccuracy = player.basicAttackACC[attack];
+            if(accBoost) {
+                newAccuracy = (int)(newAccuracy * 1.1);
+            }
+            newAccuracy -= enemy.SPD;
+            if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
+                totalDmg = (int) (player.basicAttackDMG[attack] * ((double)player.ATK/enemy.DEF));
+                if(critBoost) {
+                    totalDmg = player.applyCrit(totalDmg, true);
+                } else {
+                    totalDmg = player.applyCrit(totalDmg, false);
+                }
+            }
+        } else {
+            attack -= 3;
+            Debug.Log("Special Attack " + attack);
+            int newAccuracy = player.specialAttackACC[attack];
+            if(accBoost) {
+                newAccuracy = (int)(newAccuracy * 1.1);
+            }
+            newAccuracy -= enemy.SPD;
+            if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
+                totalDmg = (int) (player.specialAttackDMG[attack] * ((double)player.ATK/enemy.DEF));
+                if(Array.IndexOf(player.effectiveTypes[player.TYPE], enemy.TYPE) != -1) {
+                    totalDmg = (int) (totalDmg * player.effectiveMultiplier);
+                }
+                if(Array.IndexOf(player.vulnerableTypes[player.TYPE], enemy.TYPE) != -1) {
+                    totalDmg = (int) (totalDmg * player.ineffectiveMultiplier);
+                }
+                if(critBoost) {
+                    totalDmg = player.applyCrit(totalDmg, true);
+                } else {
+                    totalDmg = player.applyCrit(totalDmg, false);
+                }
+            }
         }
     }
 
     void useItem(int item) {
         switch(item) {
+            case 0:
+                Debug.Log("Used heal");
+                // Heal
+                if(player.healItems > 0 && !usedItem) {
+                    player.healItems--;
+                    int heal = 50;
+                    if((double) player.HP < (player.maxHP * .25)) {
+                        heal += 20;
+                    }
+                    player.HP = Math.Min(player.maxHP, player.HP + heal);
+                }
+                break;
             case 1:
-                Debug.Log("Item 1");
+                Debug.Log("Used DEF boost");
+                // DEF boost
+                if(player.defBoostItems > 0 && !usedItem) {
+                    player.defBoostItems--;
+                    player.DEF += 25;
+                }
                 break;
             case 2:
+                Debug.Log("Used SPD");
+                // SPD boost
+                if(player.spdBoostItems > 0 && !usedItem) {
+                    player.spdBoostItems--;
+                    player.SPD += 10;
+                }
                 break;
             case 3:
+                Debug.Log("Used ATK boost");
+                // ATK boost
+                if(player.atkBoostItems > 0 && !usedItem) {
+                    player.atkBoostItems--;
+                    player.ATK += 20;
+                }
                 break;
             case 4:
+                Debug.Log("Used ACC boost");
+                // ACC boost
+                if(player.accBoostItems > 0 && !usedItem) {
+                    player.accBoostItems--;
+                    accBoost = true;
+                }
                 break;
             case 5:
-                break;
-            case 6:
+                Debug.Log("Used Crit boost");
+                // Crit Rate boost
+                if(player.critBoostItems > 0 && !usedItem) {
+                    player.critBoostItems--;
+                    critBoost = true;
+                }
                 break;
         }
     }

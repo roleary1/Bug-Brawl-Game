@@ -6,29 +6,13 @@ using UnityEngine;
 public class AI : Player
 {
     public Player opponent;
-
-    public Dictionary<string, string[]> effectiveTypes;
-    public Dictionary<string, string[]> vulnerableTypes;
-
     public string lastAttack;
 
-    public double effectiveMultiplier = 1.5;
+    //public Text enemyHPDisplay;
 
     void Start()
     {
-        effectiveTypes = new Dictionary<string, string[]>();
-        effectiveTypes.Add("Fire", new string[]{"Grass", "Fairy"});
-        effectiveTypes.Add("Water", new string[]{"Fire", "Electric"});
-        effectiveTypes.Add("Grass", new string[]{"Water", "Fairy"});
-        effectiveTypes.Add("Electric", new string[]{"Grass", "Fire"});
-        effectiveTypes.Add("Fairy", new string[]{"Water", "Electric"});
-
-        vulnerableTypes = new Dictionary<string, string[]>();
-        vulnerableTypes.Add("Fire", new string[]{"Water", "Electric"});
-        vulnerableTypes.Add("Water", new string[]{"Grass", "Fairy"});
-        vulnerableTypes.Add("Grass", new string[]{"Fire", "Electric"});
-        vulnerableTypes.Add("Electric", new string[]{"Water", "Fairy"});
-        vulnerableTypes.Add("Fairy", new string[]{"Fire", "Grass"});
+       
     }
 
     public void setUpAI(Player opponent) {
@@ -49,43 +33,104 @@ public class AI : Player
     {
         
     }
+
     // Decision tree
-    public void getBestMove() {
+    public int getBestMove() {
         // if we're about to die
         if (canDieNextTurn()) {
             // check if the enemy is about to die
             if(isEnemyAboutToDie()) {
                 // Perform KO attack
+                bool usedItem = applyHPDEFSPD();
+                for(int i = 0; i < 3; i++) {
+                    int basicDmg = basicAttackDMG[i];
+                    if(basicDmg >= opponent.HP) {
+                        //use basic
+                        basicDmg *= (int) ((double)ATK/opponent.DEF);
+                        double newAccuracy = basicAttackACC[i] - opponent.SPD;
+                        if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
+                            return applyCrit(basicDmg, false);
+                        } else {
+                            return 0;
+                        }
+                    } else if(!usedItem && atkBoostItems > 0 && (basicDmg+20 >= opponent.HP)) {
+                        atkBoostItems--;
+                        lastAttack = basicAttackNames[i];
+                
+                        double newAccuracy = basicAttackACC[i] - opponent.SPD;
+                        if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
+                            basicDmg *= (int) ((double)ATK/opponent.DEF);
+                            basicDmg += 20;
+                            return applyCrit(basicDmg, false);
+                        } else {
+                            return 0;
+                        }
+                    }
+                    int specialDmg = specialAttackDMG[i];
+                    if(Array.IndexOf(effectiveTypes[TYPE], opponent.TYPE) != -1) {
+                        specialDmg = (int) (specialDmg * effectiveMultiplier);
+                    } else if(Array.IndexOf(vulnerableTypes[TYPE], opponent.TYPE) != -1) {
+                        specialDmg *= (int) (specialDmg * ineffectiveMultiplier);;
+                    }
 
+                    if(specialDmg >= opponent.HP) {
+                        //use special
+                        specialDmg *= (int) ((double)ATK/opponent.DEF);
+                        return applyCrit(specialDmg, false); 
+                    } else if(!usedItem && atkBoostItems > 0 && (specialDmg+20 >= opponent.HP)) {
+                        atkBoostItems--;
+                        lastAttack = specialAttackNames[i];
+                
+                        double newAccuracy = specialAttackACC[i] - opponent.SPD;
+                        if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
+                            specialDmg *= (int) ((double)ATK/opponent.DEF);
+                            specialDmg += 20;
+                            return applyCrit(specialDmg, false);
+                        } else {
+                            return 0;
+                        }
+                    }
+                }
+                return getBestAttackAgainstEnemy(usedItem);
             } else {
                 // Use HP, DEF, or SPD item, then attack with best attack
-
+                bool usedItem = applyHPDEFSPD();
+                return getBestAttackAgainstEnemy(usedItem);
             }
         } else {
             // Use the best attack against enemy
-
-        }
-    }
-    
-    public int applyCrit(int currentDmg, bool usedCritItem) {
-        int critPercent = 10;
-        if(usedCritItem) {
-            critPercent += 5;
-        }
-        if(UnityEngine.Random.Range(0,101) <= critPercent) {
-            return (int) (currentDmg * 1.5);
-        } else {
-            return currentDmg;
+            return getBestAttackAgainstEnemy(false);
         }
     }
 
-    public int getBestAttackAgainstEnemy() {
+    public bool applyHPDEFSPD() {
+        if(healItems > 0) {
+            healItems--;
+            int heal = 50;
+            if((double) HP < (maxHP * .25)) {
+                heal += 20;
+            }
+            HP = Math.Min(maxHP, HP + heal);
+            return true;
+        } else if (defBoostItems > 0) {
+            defBoostItems--;
+            DEF += 25;
+            return true;
+        } else if (spdBoostItems > 0) {
+            spdBoostItems--;
+            SPD += 10;
+            return true;
+        }
+        return false;
+    }
+
+    public int getBestAttackAgainstEnemy(bool usedItem) {
         // if we are effective against enemy type
         if(Array.IndexOf(effectiveTypes[TYPE], opponent.TYPE) != -1) {
             // use special attack
-            if(accuracyBoostItems > 0) {
+            if(!usedItem && accBoostItems > 0) {
                 //use riskiest, highest dmg special
-                accuracyBoostItems--;
+                accBoostItems--;
                 lastAttack = specialAttackNames[2];
 
                 double newAccuracy = (specialAttackACC[2] * 1.1) - opponent.SPD;
@@ -95,7 +140,7 @@ public class AI : Player
                 } else {
                     return 0;   //attack misses
                 }
-            } else if(atkBoostItems > 0) {
+            } else if(!usedItem && atkBoostItems > 0) {
                 //use more reliable, 2nd highest dmg special
                 atkBoostItems--;
                 lastAttack = specialAttackNames[1];
@@ -108,9 +153,9 @@ public class AI : Player
                     return 0;
                 }
                 
-            } else if(critRateBoostItems > 0) {
+            } else if(!usedItem && critBoostItems > 0) {
                 //use most accurate, least dmg special
-                critRateBoostItems--;
+                critBoostItems--;
                 lastAttack = specialAttackNames[0];
 
                 double newAccuracy = specialAttackACC[0] - opponent.SPD;
@@ -135,18 +180,18 @@ public class AI : Player
         } else {
             // use basic attack: default to highest basic attack, apply items if we can
             double newAccuracy = (basicAttackACC[2]); 
-            int currentDmg = (int) (basicAttackDMG[2] * effectiveMultiplier * ((double)ATK/opponent.DEF));
+            int currentDmg = (int) (basicAttackDMG[2] * ((double)ATK/opponent.DEF));
             bool critBoost = false;
 
-            if(accuracyBoostItems > 0) {
-                accuracyBoostItems--;
+            if(!usedItem && accBoostItems > 0) {
+                accBoostItems--;
                 lastAttack = basicAttackNames[2];
                 
                 newAccuracy *= 1.1;
-            } else if(atkBoostItems > 0) {
+            } else if(!usedItem && atkBoostItems > 0) {
                 atkBoostItems--;
                 currentDmg += 20;
-            } else if(critRateBoostItems > 0) {
+            } else if(!usedItem && critBoostItems > 0) {
                 critBoost = true;
             }
             newAccuracy -= opponent.SPD;
@@ -194,9 +239,17 @@ public class AI : Player
                     return true;
                 }
             }
-            for(int i = 0; i < specialAttackNames.Count; i++) {
-                if(specialAttackDMG[i] >= opponent.HP) {
-                    return true;
+            if(Array.IndexOf(effectiveTypes[TYPE], opponent.TYPE) != -1) {
+                for(int i = 0; i < specialAttackNames.Count; i++) {
+                    if((specialAttackDMG[i]*ineffectiveMultiplier) >= opponent.HP) {
+                        return true;
+                    }
+                }
+            } else  {
+                for(int i = 0; i < specialAttackNames.Count; i++) {
+                    if(specialAttackDMG[i] >= opponent.HP) {
+                        return true;
+                    }
                 }
             }
         }
