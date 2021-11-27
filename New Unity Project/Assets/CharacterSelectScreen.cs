@@ -38,7 +38,6 @@ public class CharacterSelectScreen : MonoBehaviour
     void enterBattle()
     {
         // Set up the player stats before transitioning
-        //playerObj = new Player();
         playerObj.initializeStats(charName, chosenChar);
         enemyObj.setUpAI(playerObj.TYPE);
         SceneManager.LoadScene("BattleScene");
