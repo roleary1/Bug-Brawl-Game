@@ -2,12 +2,12 @@
   "HP": 190,
   "ATK": 48,
   "DEF": 65,
-  "SPD": 43,
+  "SPD": 19,
   "TYPE": "Water",
-  "basicAttackNames": ["Tackle","Tail Whip", "Shell Spin"],
-  "basicAttackDMG": [40,45,47],
-  "basicAttackACC": [100,85,65],
-  "specialAttackNames": ["Brine", "Waterfall",  "Hydro Pump"],
-  "specialAttackDMG": [45,48,52],
-  "specialAttackACC": [100,80,50]
+  "basicAttackNames": ["Tackle", "Tail Whip", "Shell Spin"],
+  "basicAttackDMG": [40, 45, 47],
+  "basicAttackACC": [100, 85, 65],
+  "specialAttackNames": ["Brine", "Waterfall", "Hydro Pump"],
+  "specialAttackDMG": [45, 48, 52],
+  "specialAttackACC": [100, 80, 50]
 }

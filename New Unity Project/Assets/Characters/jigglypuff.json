@@ -2,7 +2,7 @@
   "HP": 190,
   "ATK": 50,
   "DEF": 47,
-  "SPD": 48,
+  "SPD": 20,
   "TYPE": "Fairy",
   "basicAttackNames": ["Pound","Body Slam", "Round"],
   "basicAttackDMG": [41,45,46],
