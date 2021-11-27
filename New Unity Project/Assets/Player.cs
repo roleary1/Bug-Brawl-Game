@@ -25,11 +25,11 @@ public class Player : MonoBehaviour
     // Increase ATK by 20
     public int atkBoostItems = 2;
     // Increase Accuracy of next attack by 10%
-    public int accuracyBoostItems = 3;
+    public int accBoostItems = 3;
     // Increase SPD by 10
-    public int evasiveBoostItems = 3;
+    public int spdBoostItems = 3;
     // Increase crit rate by 5%
-    public int critRateBoostItems = 3;
+    public int critBoostItems = 3;
 
     public bool gameStart = false;
 
