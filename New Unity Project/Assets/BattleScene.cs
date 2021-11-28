@@ -14,9 +14,12 @@ public class BattleScene : MonoBehaviour
     public Button item1, item2, item3, item4, item5, item6;
 
     public Image attackWindow, itemWindow;
+    public Text playerName;
+    public Text enemyName;
     public Text playerHP;
     public Text enemyHP;
-
+    public Image playerImage;
+    public Image enemyImage;
     public Player player;
 
     public AI enemy;
@@ -47,7 +50,17 @@ public class BattleScene : MonoBehaviour
         } else {
             Debug.Log("Enemy game obj was null");
         }
+        player.setUpDict();
+        enemy.setUpDict();
+        
+        playerName.text = player.name;
+        enemyName.text = enemy.name;
 
+        enemyHP.text = "HP: "+ enemy.maxHP;
+        playerHP.text = "HP: "+ player.maxHP;
+
+        playerImage.sprite = Resources.Load <Sprite> (player.name);
+        enemyImage.sprite = Resources.Load <Sprite> (enemy.name);
         
         basicAttack1.onClick.AddListener(delegate { executeAttack(0); });
         basicAttack2.onClick.AddListener(delegate { executeAttack(1); });
@@ -80,6 +93,7 @@ public class BattleScene : MonoBehaviour
         // apply AI dmg to player
         // check if we died
         // reset the AI and player stats to base stats, reset usedItem
+        Debug.Log("Our Turn:");
         int totalDmg = 0;
         if(attack < 3) {
             Debug.Log("Basic Attack " + attack);
@@ -95,6 +109,8 @@ public class BattleScene : MonoBehaviour
                 } else {
                     totalDmg = player.applyCrit(totalDmg, false);
                 }
+            } else {
+                Debug.Log("We missed :(");
             }
         } else {
             attack -= 3;
@@ -117,14 +133,47 @@ public class BattleScene : MonoBehaviour
                 } else {
                     totalDmg = player.applyCrit(totalDmg, false);
                 }
+            } else {
+                Debug.Log("We missed :(");
             }
         }
+        
+        Debug.Log("Apply Player Damage: " + totalDmg);
+        enemy.HP -= totalDmg;
+        enemyHP.text = "HP: " + enemy.HP;
+        if(enemy.HP <= totalDmg) {
+            Debug.Log("We KOed the Enemy!");
+            // we killed the enemy with our attack
+            // print we won, change scene to wining screen
+
+        } 
+        // we didn't kill them
+        Debug.Log("Enemy Turn");
+        int enemyDmg = enemy.getBestMove();
+        player.HP -= enemyDmg;
+        playerHP.text = "HP: " + player.HP;
+        if(player.HP <= enemyDmg) {
+            Debug.Log("Enemy KOed us :(");
+            // we died, take us to lose screen
+
+        }
+        // no one died, reset the stats for enemy and us
+        Debug.Log("Reseting stats for everyone");
+        accBoost = false;
+        critBoost = false;
+        usedItem = false;
+        player.DEF = player.baseDEF;
+        player.SPD = player.baseSPD;
+        player.ATK = player.baseATK;
+        
+        enemy.DEF = enemy.baseDEF;
+        enemy.SPD = enemy.baseSPD;
+        enemy.ATK = enemy.baseATK;
     }
 
     void useItem(int item) {
         switch(item) {
             case 0:
-                Debug.Log("Used heal");
                 // Heal
                 if(player.healItems > 0 && !usedItem) {
                     player.healItems--;
@@ -134,30 +183,31 @@ public class BattleScene : MonoBehaviour
                     }
                     player.HP = Math.Min(player.maxHP, player.HP + heal);
                 }
+                Debug.Log("Used heal: HP is now "+ player.HP);
                 break;
             case 1:
-                Debug.Log("Used DEF boost");
                 // DEF boost
                 if(player.defBoostItems > 0 && !usedItem) {
                     player.defBoostItems--;
                     player.DEF += 25;
                 }
+                Debug.Log("Used DEF boost: DEF is now " + player.DEF);
                 break;
             case 2:
-                Debug.Log("Used SPD");
                 // SPD boost
                 if(player.spdBoostItems > 0 && !usedItem) {
                     player.spdBoostItems--;
                     player.SPD += 10;
                 }
+                Debug.Log("Used SPD boost: SPD is now " + player.SPD);
                 break;
             case 3:
-                Debug.Log("Used ATK boost");
                 // ATK boost
                 if(player.atkBoostItems > 0 && !usedItem) {
                     player.atkBoostItems--;
                     player.ATK += 20;
                 }
+                Debug.Log("Used ATK boost: ATK is now "+ player.ATK);
                 break;
             case 4:
                 Debug.Log("Used ACC boost");
@@ -176,6 +226,7 @@ public class BattleScene : MonoBehaviour
                 }
                 break;
         }
+        usedItem = true;
     }
 
 

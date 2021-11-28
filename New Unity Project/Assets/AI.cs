@@ -8,8 +8,6 @@ public class AI : Player
     public Player opponent;
     public string lastAttack;
 
-    //public Text enemyHPDisplay;
-
     void Start()
     {
        
@@ -49,11 +47,13 @@ public class AI : Player
                         basicDmg *= (int) ((double)ATK/opponent.DEF);
                         double newAccuracy = basicAttackACC[i] - opponent.SPD;
                         if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
+                            Debug.Log("AI uses basic attack!");
                             return applyCrit(basicDmg, false);
                         } else {
+                            Debug.Log("AI uses basic attack, but missed.");
                             return 0;
                         }
-                    } else if(!usedItem && atkBoostItems > 0 && (basicDmg+20 >= opponent.HP)) {
+                    } else if(!usedItem && atkBoostItems > 0 && (basicDmg + 20 >= opponent.HP)) {
                         atkBoostItems--;
                         lastAttack = basicAttackNames[i];
                 
@@ -61,8 +61,10 @@ public class AI : Player
                         if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
                             basicDmg *= (int) ((double)ATK/opponent.DEF);
                             basicDmg += 20;
+                            Debug.Log("AI uses basic attack with atk boost item!");
                             return applyCrit(basicDmg, false);
                         } else {
+                            Debug.Log("AI uses basic attack with atk boost item, but missed.");
                             return 0;
                         }
                     }
@@ -85,8 +87,10 @@ public class AI : Player
                         if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
                             specialDmg *= (int) ((double)ATK/opponent.DEF);
                             specialDmg += 20;
+                            Debug.Log("AI uses special attack!");
                             return applyCrit(specialDmg, false);
                         } else {
+                            Debug.Log("AI uses special attack, but missed.");
                             return 0;
                         }
                     }
@@ -111,14 +115,17 @@ public class AI : Player
                 heal += 20;
             }
             HP = Math.Min(maxHP, HP + heal);
+            Debug.Log("AI used heal item! HP is now "+HP);
             return true;
         } else if (defBoostItems > 0) {
             defBoostItems--;
             DEF += 25;
+            Debug.Log("AI used DEF boost item! DEF is now "+DEF);
             return true;
         } else if (spdBoostItems > 0) {
             spdBoostItems--;
             SPD += 10;
+            Debug.Log("AI used SPD boost item! SPD is now "+SPD);
             return true;
         }
         return false;
@@ -136,8 +143,10 @@ public class AI : Player
                 double newAccuracy = (specialAttackACC[2] * 1.1) - opponent.SPD;
                 if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
                     int currentDmg = (int) (specialAttackDMG[2] * effectiveMultiplier * ((double)ATK/opponent.DEF));
+                    Debug.Log("AI used strongest special attack with accuracy boost item!");
                     return applyCrit(currentDmg, false);
                 } else {
+                    Debug.Log("AI used strongest special attack with accuracy boost item, but missed.");
                     return 0;   //attack misses
                 }
             } else if(!usedItem && atkBoostItems > 0) {
@@ -148,8 +157,10 @@ public class AI : Player
                 double newAccuracy = specialAttackACC[1] - opponent.SPD;
                 if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
                     int currentDmg = (int) (specialAttackDMG[1] * effectiveMultiplier * ((double)ATK/opponent.DEF)) + 20;
+                    Debug.Log("AI used second strongest special attack with ATK boost item!");
                     return applyCrit(currentDmg, false);
                 } else {
+                    Debug.Log("AI used second strongest special attack with ATK boost item but missed.");
                     return 0;
                 }
                 
@@ -161,8 +172,10 @@ public class AI : Player
                 double newAccuracy = specialAttackACC[0] - opponent.SPD;
                 if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
                     int currentDmg = (int) (specialAttackDMG[0] * effectiveMultiplier * ((double)ATK/opponent.DEF));
+                    Debug.Log("AI used weakest special attack along with CRIT boost item!");
                     return applyCrit(currentDmg, true);
                 } else {
+                    Debug.Log("AI used weakest special attack along with CRIT boost item, but missed.");
                     return 0;
                 }
             } else {
@@ -188,22 +201,28 @@ public class AI : Player
                 lastAttack = basicAttackNames[2];
                 
                 newAccuracy *= 1.1;
+                Debug.Log("AI used accuracy boost item!");
             } else if(!usedItem && atkBoostItems > 0) {
                 atkBoostItems--;
                 currentDmg += 20;
+                Debug.Log("AI used ATK boost item!");
             } else if(!usedItem && critBoostItems > 0) {
                 critBoost = true;
+                Debug.Log("AI used CRIT boost item!");
             }
             newAccuracy -= opponent.SPD;
             if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
+                Debug.Log("AI uses strongest basic attack!");
                 return applyCrit(currentDmg, critBoost);
             } else {
+                Debug.Log("AI uses strongest basic attack, but missed.");
                 return 0;
             }
         }
     }
 
-    public bool canDieNextTurn() {        
+    public bool canDieNextTurn() {     
+        bool res = Array.IndexOf(vulnerableTypes[TYPE], opponent.TYPE) != -1;  
         // we are weak against enemy type, add a multiplier for enemy output damage for special attacks
         if(Array.IndexOf(vulnerableTypes[TYPE], opponent.TYPE) != -1) {
             for(int i = 0; i < opponent.specialAttackNames.Count; i++) {
@@ -254,7 +273,5 @@ public class AI : Player
             }
         }
         return false;
-
-
-        }
+    }
 }

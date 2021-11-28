@@ -8,8 +8,11 @@ public class Player : MonoBehaviour
     public string name;
     public int maxHP;
     public int HP;
+    public int baseATK;
     public int ATK;
+    public int baseDEF;
     public int DEF;
+    public int baseSPD;
     public int SPD;
     public string TYPE;
     public List<string> basicAttackNames;
@@ -43,6 +46,10 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+    }
+
+    public void setUpDict() {
         effectiveTypes = new Dictionary<string, string[]>();
         effectiveTypes.Add("Fire", new string[]{"Grass", "Fairy"});
         effectiveTypes.Add("Water", new string[]{"Fire", "Electric"});
@@ -78,8 +85,11 @@ public class Player : MonoBehaviour
         this.name = playerName;
         this.maxHP = charStats.HP;
         this.HP = charStats.HP;
+        this.baseATK = charStats.ATK;
         this.ATK = charStats.ATK;
+        this.baseDEF = charStats.DEF;
         this.DEF = charStats.DEF;
+        this.baseSPD = charStats.SPD;
         this.SPD = charStats.SPD;
         this.TYPE = charStats.TYPE;
 
