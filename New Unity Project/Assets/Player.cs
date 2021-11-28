@@ -35,13 +35,13 @@ public class Player : MonoBehaviour
     // Increase crit rate by 5%
     public int critBoostItems = 3;
 
-    public bool gameStart = false;
-
     public Dictionary<string, string[]> effectiveTypes;
     public Dictionary<string, string[]> vulnerableTypes;
 
     public double effectiveMultiplier = 1.5;
     public double ineffectiveMultiplier = 0.5;
+
+    public Text displayText;
 
     // Start is called before the first frame update
     void Start()
@@ -49,7 +49,7 @@ public class Player : MonoBehaviour
 
     }
 
-    public void setUpDict() {
+    public void setUpDict(Text displayText) {
         effectiveTypes = new Dictionary<string, string[]>();
         effectiveTypes.Add("Fire", new string[]{"Grass", "Fairy"});
         effectiveTypes.Add("Water", new string[]{"Fire", "Electric"});
@@ -63,25 +63,17 @@ public class Player : MonoBehaviour
         vulnerableTypes.Add("Grass", new string[]{"Fire", "Electric"});
         vulnerableTypes.Add("Electric", new string[]{"Water", "Fairy"});
         vulnerableTypes.Add("Fairy", new string[]{"Fire", "Grass"});
+        
+        this.displayText = displayText;
     }
 
     void Awake() {
         DontDestroyOnLoad(this.gameObject);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(gameStart) {
-            if(playerHPDisplay != null) {
-                playerHPDisplay.text = "" + HP;
-            }
-        }
-    }
-
     public void initializeStats(string playerName, ReadJson.Character charStats) {
-        this.gameStart = true;
-        
+        Debug.Log("in Initalize stats with " + playerName);
+
         this.name = playerName;
         this.maxHP = charStats.HP;
         this.HP = charStats.HP;
@@ -107,6 +99,8 @@ public class Player : MonoBehaviour
             critPercent += 5;
         }
         if(UnityEngine.Random.Range(0,101) <= critPercent) {
+            displayText.text += "Critical Hit!\n";
+            Debug.Log("Critical hit!!");
             return (int) (currentDmg * 1.5);
         } else {
             return currentDmg;

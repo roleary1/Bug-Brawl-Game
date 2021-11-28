@@ -18,18 +18,12 @@ public class AI : Player
         string defaultEnemy = "charmander";
         ReadJson jsonReader = new ReadJson();
         ReadJson.Character chosenChar = jsonReader.LoadJson(defaultEnemy);
-        initializeStats(defaultEnemy, chosenChar);
+        initializeStats("Charmander", chosenChar);
         this.opponent = opponent;
     }
 
     void Awake() {
         DontDestroyOnLoad(this.gameObject);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     // Decision tree
@@ -46,17 +40,21 @@ public class AI : Player
                         //use basic
                         basicDmg *= (int) ((double)ATK/opponent.DEF);
                         double newAccuracy = basicAttackACC[i] - opponent.SPD;
+                        displayText.text += this.name + " used " + basicAttackNames[i] + ".\n";
                         if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
                             Debug.Log("AI uses basic attack!");
                             return applyCrit(basicDmg, false);
                         } else {
+                            displayText.text += this.name + " missed.\n";
                             Debug.Log("AI uses basic attack, but missed.");
                             return 0;
                         }
                     } else if(!usedItem && atkBoostItems > 0 && (basicDmg + 20 >= opponent.HP)) {
                         atkBoostItems--;
                         lastAttack = basicAttackNames[i];
-                
+                        displayText.text += this.name + " used the ATK boost item.\n";
+                        displayText.text += this.name + " used " + basicAttackNames[i] + "!\n";
+                        
                         double newAccuracy = basicAttackACC[i] - opponent.SPD;
                         if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
                             basicDmg *= (int) ((double)ATK/opponent.DEF);
@@ -64,25 +62,36 @@ public class AI : Player
                             Debug.Log("AI uses basic attack with atk boost item!");
                             return applyCrit(basicDmg, false);
                         } else {
+                            displayText.text += this.name + "missed.\n";
                             Debug.Log("AI uses basic attack with atk boost item, but missed.");
                             return 0;
                         }
                     }
                     int specialDmg = specialAttackDMG[i];
+                    bool effective = true;
                     if(Array.IndexOf(effectiveTypes[TYPE], opponent.TYPE) != -1) {
                         specialDmg = (int) (specialDmg * effectiveMultiplier);
                     } else if(Array.IndexOf(vulnerableTypes[TYPE], opponent.TYPE) != -1) {
-                        specialDmg *= (int) (specialDmg * ineffectiveMultiplier);;
+                        effective = false;
+                        specialDmg *= (int) (specialDmg * ineffectiveMultiplier);
                     }
 
                     if(specialDmg >= opponent.HP) {
                         //use special
                         specialDmg *= (int) ((double)ATK/opponent.DEF);
+                        displayText.text += this.name + " used " + specialAttackNames[i] + "!\n";
+                        if(effective) {
+                            displayText.text += "It's super effective!\n";
+                        } else {
+                            displayText.text += "It's not very effective.\n";
+                        }
                         return applyCrit(specialDmg, false); 
                     } else if(!usedItem && atkBoostItems > 0 && (specialDmg+20 >= opponent.HP)) {
                         atkBoostItems--;
                         lastAttack = specialAttackNames[i];
-                
+                        displayText.text += this.name + " used the ATK boost item.\n";
+                        displayText.text += this.name + " used " + specialAttackNames[i] + "!\n";
+                        
                         double newAccuracy = specialAttackACC[i] - opponent.SPD;
                         if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
                             specialDmg *= (int) ((double)ATK/opponent.DEF);
@@ -90,6 +99,7 @@ public class AI : Player
                             Debug.Log("AI uses special attack!");
                             return applyCrit(specialDmg, false);
                         } else {
+                            displayText.text += specialAttackNames[i] + "missed.\n";
                             Debug.Log("AI uses special attack, but missed.");
                             return 0;
                         }
@@ -115,16 +125,19 @@ public class AI : Player
                 heal += 20;
             }
             HP = Math.Min(maxHP, HP + heal);
+            displayText.text = "Used heal item!\n";;
             Debug.Log("AI used heal item! HP is now "+HP);
             return true;
         } else if (defBoostItems > 0) {
             defBoostItems--;
             DEF += 25;
+            displayText.text = "Used DEF boost item!\n";
             Debug.Log("AI used DEF boost item! DEF is now "+DEF);
             return true;
         } else if (spdBoostItems > 0) {
             spdBoostItems--;
             SPD += 10;
+            displayText.text = "Used SPD item!\n";
             Debug.Log("AI used SPD boost item! SPD is now "+SPD);
             return true;
         }
@@ -139,13 +152,16 @@ public class AI : Player
                 //use riskiest, highest dmg special
                 accBoostItems--;
                 lastAttack = specialAttackNames[2];
-
+                displayText.text += this.name + " used the Accuracy boost item.\n";
+                displayText.text += this.name + " used " + specialAttackNames[2] + ".\n";
                 double newAccuracy = (specialAttackACC[2] * 1.1) - opponent.SPD;
                 if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
                     int currentDmg = (int) (specialAttackDMG[2] * effectiveMultiplier * ((double)ATK/opponent.DEF));
+                    displayText.text += "It's super effective!\n";
                     Debug.Log("AI used strongest special attack with accuracy boost item!");
                     return applyCrit(currentDmg, false);
                 } else {
+                    displayText.text += specialAttackNames[2] + " missed.\n";
                     Debug.Log("AI used strongest special attack with accuracy boost item, but missed.");
                     return 0;   //attack misses
                 }
@@ -153,13 +169,17 @@ public class AI : Player
                 //use more reliable, 2nd highest dmg special
                 atkBoostItems--;
                 lastAttack = specialAttackNames[1];
-                
+                displayText.text += this.name + " used the ATK boost item.\n";
+                displayText.text += this.name + " used " + specialAttackNames[1] + ".\n";
+
                 double newAccuracy = specialAttackACC[1] - opponent.SPD;
                 if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
+                    displayText.text += "It's super effective!\n";
                     int currentDmg = (int) (specialAttackDMG[1] * effectiveMultiplier * ((double)ATK/opponent.DEF)) + 20;
                     Debug.Log("AI used second strongest special attack with ATK boost item!");
                     return applyCrit(currentDmg, false);
                 } else {
+                    displayText.text += specialAttackNames[1] + " missed.\n";
                     Debug.Log("AI used second strongest special attack with ATK boost item but missed.");
                     return 0;
                 }
@@ -168,25 +188,32 @@ public class AI : Player
                 //use most accurate, least dmg special
                 critBoostItems--;
                 lastAttack = specialAttackNames[0];
-
+                displayText.text += this.name + " used the Crit Rate boost item.\n";
+                displayText.text += this.name + " used " + specialAttackNames[0] + ".\n";
+                
                 double newAccuracy = specialAttackACC[0] - opponent.SPD;
                 if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
+                    displayText.text += "It's super effective!\n";
                     int currentDmg = (int) (specialAttackDMG[0] * effectiveMultiplier * ((double)ATK/opponent.DEF));
                     Debug.Log("AI used weakest special attack along with CRIT boost item!");
                     return applyCrit(currentDmg, true);
                 } else {
+                    displayText.text += specialAttackNames[0] + " missed.\n";
                     Debug.Log("AI used weakest special attack along with CRIT boost item, but missed.");
                     return 0;
                 }
             } else {
                 // default to highest DMG special attack
                 lastAttack = specialAttackNames[2];
+                displayText.text += this.name + " used " + specialAttackNames[2] + ".\n";
 
                 double newAccuracy = specialAttackACC[2] - opponent.SPD;
                 if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
+                    displayText.text += "It's super effective!\n";
                     int currentDmg = (int) (specialAttackDMG[2] * effectiveMultiplier * ((double)ATK/opponent.DEF));
                     return applyCrit(currentDmg, false);
                 } else {
+                    displayText.text += specialAttackNames[0] + " missed.\n";
                     return 0;   //attack misses
                 }
             }
@@ -199,22 +226,29 @@ public class AI : Player
             if(!usedItem && accBoostItems > 0) {
                 accBoostItems--;
                 lastAttack = basicAttackNames[2];
+                displayText.text += this.name + " used the Accuracy boost item.\n";
                 
                 newAccuracy *= 1.1;
                 Debug.Log("AI used accuracy boost item!");
             } else if(!usedItem && atkBoostItems > 0) {
                 atkBoostItems--;
                 currentDmg += 20;
+
+                displayText.text += this.name + " used the ATK boost item.\n";
                 Debug.Log("AI used ATK boost item!");
             } else if(!usedItem && critBoostItems > 0) {
+                displayText.text += this.name + " used the Crit Rate boost item.\n";
                 critBoost = true;
                 Debug.Log("AI used CRIT boost item!");
             }
+            displayText.text += this.name + " used " + basicAttackNames[2] + ".\n";
+            
             newAccuracy -= opponent.SPD;
             if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
                 Debug.Log("AI uses strongest basic attack!");
                 return applyCrit(currentDmg, critBoost);
             } else {
+                displayText.text += basicAttackNames[2] + " missed.\n";
                 Debug.Log("AI uses strongest basic attack, but missed.");
                 return 0;
             }

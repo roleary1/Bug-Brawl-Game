@@ -22,6 +22,8 @@ public class BattleScene : MonoBehaviour
     public Image enemyImage;
     public Player player;
 
+    public Text displayText;
+
     public AI enemy;
 
     public bool usedItem = false;
@@ -31,6 +33,7 @@ public class BattleScene : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("Inside battle scene start");
         GameObject playerGameObj = GameObject.Find("Player");
         if (playerGameObj != null) {
             player = playerGameObj.GetComponent<Player>();
@@ -50,11 +53,27 @@ public class BattleScene : MonoBehaviour
         } else {
             Debug.Log("Enemy game obj was null");
         }
-        player.setUpDict();
-        enemy.setUpDict();
+        player.setUpDict(displayText);
+        enemy.setUpDict(displayText);
         
         playerName.text = player.name;
         enemyName.text = enemy.name;
+
+        basicAttack1.GetComponentInChildren<Text>().text = player.basicAttackNames[0];
+        specialAttack1.GetComponentInChildren<Text>().text = player.specialAttackNames[0];
+
+        basicAttack2.GetComponentInChildren<Text>().text = player.basicAttackNames[1];
+        specialAttack2.GetComponentInChildren<Text>().text = player.specialAttackNames[1];
+
+        basicAttack3.GetComponentInChildren<Text>().text = player.basicAttackNames[2];
+        specialAttack3.GetComponentInChildren<Text>().text = player.specialAttackNames[2];
+
+        item1.GetComponentInChildren<Text>().text += ": " + player.healItems;
+        item2.GetComponentInChildren<Text>().text += ": " +player.defBoostItems;
+        item3.GetComponentInChildren<Text>().text += ": " + player.spdBoostItems;
+        item4.GetComponentInChildren<Text>().text += ": " + player.atkBoostItems;
+        item5.GetComponentInChildren<Text>().text += ": " + player.accBoostItems;
+        item6.GetComponentInChildren<Text>().text += ": " + player.critBoostItems;
 
         enemyHP.text = "HP: "+ enemy.maxHP;
         playerHP.text = "HP: "+ player.maxHP;
@@ -93,10 +112,12 @@ public class BattleScene : MonoBehaviour
         // apply AI dmg to player
         // check if we died
         // reset the AI and player stats to base stats, reset usedItem
+        displayText.text = "";
         Debug.Log("Our Turn:");
         int totalDmg = 0;
         if(attack < 3) {
             Debug.Log("Basic Attack " + attack);
+            displayText.text += "" + player.name + " used " + player.basicAttackNames[attack] + ".\n";
             int newAccuracy = player.basicAttackACC[attack];
             if(accBoost) {
                 newAccuracy = (int)(newAccuracy * 1.1);
@@ -110,11 +131,13 @@ public class BattleScene : MonoBehaviour
                     totalDmg = player.applyCrit(totalDmg, false);
                 }
             } else {
+                displayText.text += "" + player.basicAttackNames[attack] + " missed :(\n";
                 Debug.Log("We missed :(");
             }
         } else {
             attack -= 3;
             Debug.Log("Special Attack " + attack);
+            displayText.text += "" + player.name + " used " + player.specialAttackNames[attack] + ".\n";
             int newAccuracy = player.specialAttackACC[attack];
             if(accBoost) {
                 newAccuracy = (int)(newAccuracy * 1.1);
@@ -123,9 +146,11 @@ public class BattleScene : MonoBehaviour
             if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
                 totalDmg = (int) (player.specialAttackDMG[attack] * ((double)player.ATK/enemy.DEF));
                 if(Array.IndexOf(player.effectiveTypes[player.TYPE], enemy.TYPE) != -1) {
+                    displayText.text += "It's super effective!\n";
                     totalDmg = (int) (totalDmg * player.effectiveMultiplier);
                 }
                 if(Array.IndexOf(player.vulnerableTypes[player.TYPE], enemy.TYPE) != -1) {
+                    displayText.text += "It's not very effective.\n";
                     totalDmg = (int) (totalDmg * player.ineffectiveMultiplier);
                 }
                 if(critBoost) {
@@ -134,28 +159,43 @@ public class BattleScene : MonoBehaviour
                     totalDmg = player.applyCrit(totalDmg, false);
                 }
             } else {
+                displayText.text += "" + player.specialAttackNames[attack] + " missed :(\n";
                 Debug.Log("We missed :(");
             }
         }
         
         Debug.Log("Apply Player Damage: " + totalDmg);
+        displayText.text += player.name + " dealt " + totalDmg + " damage!\n";
         enemy.HP -= totalDmg;
+        enemy.HP = Math.Max(enemy.HP, 0);
         enemyHP.text = "HP: " + enemy.HP;
-        if(enemy.HP <= totalDmg) {
-            Debug.Log("We KOed the Enemy!");
+        if(enemy.HP == 0) {
             // we killed the enemy with our attack
             // print we won, change scene to wining screen
+            Debug.Log("We KOed the Enemy!");
+            displayText.text = "We win!";
+            StartCoroutine(EndGame());
+        } else {
+            StartCoroutine(EnemyMove());
+        }
+    }
 
-        } 
-        // we didn't kill them
+        
+    private IEnumerator EnemyMove() {
+        yield return new WaitForSeconds (4);
+        displayText.text = "";
         Debug.Log("Enemy Turn");
         int enemyDmg = enemy.getBestMove();
+        displayText.text += enemy.name + " dealt " + enemyDmg + " damage!\n";
+        enemyHP.text = "HP: " + enemy.HP;
         player.HP -= enemyDmg;
+        player.HP = Math.Max(0, player.HP);
         playerHP.text = "HP: " + player.HP;
-        if(player.HP <= enemyDmg) {
+        if(player.HP == 0) {
+            displayText.text = "We lose. :(";
             Debug.Log("Enemy KOed us :(");
             // we died, take us to lose screen
-
+            StartCoroutine(EndGame());
         }
         // no one died, reset the stats for enemy and us
         Debug.Log("Reseting stats for everyone");
@@ -171,6 +211,12 @@ public class BattleScene : MonoBehaviour
         enemy.ATK = enemy.baseATK;
     }
 
+    private IEnumerator EndGame() {
+        yield return new WaitForSeconds (4);
+        Destroy(this);
+        SceneManager.LoadScene("MainScene");
+    }
+
     void useItem(int item) {
         switch(item) {
             case 0:
@@ -182,47 +228,60 @@ public class BattleScene : MonoBehaviour
                         heal += 20;
                     }
                     player.HP = Math.Min(player.maxHP, player.HP + heal);
+                    item1.GetComponentInChildren<Text>().text = "Heal: " + player.healItems;
+                    Debug.Log("Used heal: HP is now "+ player.HP);
+                    displayText.text = "Used heal item!\n";
+                    playerHP.text = "HP: "+ player.HP;
                 }
-                Debug.Log("Used heal: HP is now "+ player.HP);
                 break;
             case 1:
                 // DEF boost
                 if(player.defBoostItems > 0 && !usedItem) {
                     player.defBoostItems--;
                     player.DEF += 25;
+                    item2.GetComponentInChildren<Text>().text = "DEF: " + player.defBoostItems;
+                    Debug.Log("Used DEF boost: DEF is now " + player.DEF);
+                    displayText.text = "Used DEF boost item!\n";
                 }
-                Debug.Log("Used DEF boost: DEF is now " + player.DEF);
                 break;
             case 2:
                 // SPD boost
                 if(player.spdBoostItems > 0 && !usedItem) {
                     player.spdBoostItems--;
                     player.SPD += 10;
+                    item3.GetComponentInChildren<Text>().text = "SPD: " + player.spdBoostItems;
+                    displayText.text = "Used SPD item!\n";
+                    Debug.Log("Used SPD boost: SPD is now " + player.SPD);
                 }
-                Debug.Log("Used SPD boost: SPD is now " + player.SPD);
                 break;
             case 3:
                 // ATK boost
                 if(player.atkBoostItems > 0 && !usedItem) {
                     player.atkBoostItems--;
                     player.ATK += 20;
+                    item4.GetComponentInChildren<Text>().text = "ATK: " + player.atkBoostItems;
+                    displayText.text = "Used ATK boost item!\n";
+                    Debug.Log("Used ATK boost: ATK is now "+ player.ATK);
                 }
-                Debug.Log("Used ATK boost: ATK is now "+ player.ATK);
                 break;
             case 4:
-                Debug.Log("Used ACC boost");
                 // ACC boost
                 if(player.accBoostItems > 0 && !usedItem) {
                     player.accBoostItems--;
                     accBoost = true;
+                    displayText.text = "Used accuracy boost item!\n";
+                    Debug.Log("Used ACC boost");
+                    item5.GetComponentInChildren<Text>().text = "ACC: " + player.accBoostItems;
                 }
                 break;
             case 5:
-                Debug.Log("Used Crit boost");
                 // Crit Rate boost
                 if(player.critBoostItems > 0 && !usedItem) {
                     player.critBoostItems--;
                     critBoost = true;
+                    displayText.text = "Used crit rate boost item!\n";
+                    Debug.Log("Used Crit boost");
+                    item6.GetComponentInChildren<Text>().text = "Crit: " + player.critBoostItems;
                 }
                 break;
         }

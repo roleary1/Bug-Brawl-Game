@@ -2,7 +2,7 @@
   "HP": 195,
   "ATK": 49,
   "DEF": 49,
-  "SPD": 18,
+  "SPD": 12,
   "TYPE": "Grass",
   "basicAttackNames": ["Tackle","Take Down", "Double-Edge"],
   "basicAttackDMG": [40,45,47],

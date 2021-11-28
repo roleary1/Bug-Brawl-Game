@@ -2,7 +2,7 @@
   "HP": 185,
   "ATK": 50,
   "DEF": 50,
-  "SPD": 20,
+  "SPD": 17,
   "TYPE": "Electric",
   "basicAttackNames": ["Growl","Quick Attack", "Double Team"],
   "basicAttackDMG": [41,46,48],

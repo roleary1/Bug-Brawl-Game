@@ -25,7 +25,6 @@ public class CharacterSelectScreen : MonoBehaviour
         pikachu_button.onClick.AddListener(delegate { selectCharacter("pikachu"); });
         jiggly_button.onClick.AddListener(delegate { selectCharacter("jigglypuff"); });
         battle_button.onClick.AddListener(enterBattle);
-
     }
 
     // Update is called once per frame
@@ -33,10 +32,11 @@ public class CharacterSelectScreen : MonoBehaviour
     {
         
     }
-    
+
     void enterBattle()
     {
         // Set up the player stats before transitioning
+        Debug.Log("Initalizing character " + charName);
         playerObj.initializeStats(charName, chosenChar);
         enemyObj.setUpAI(playerObj);
         SceneManager.LoadScene("BattleScene");
@@ -44,9 +44,9 @@ public class CharacterSelectScreen : MonoBehaviour
 
     void selectCharacter(string characterName)
     {
-        charName = characterName;
+        charName = char.ToUpper(characterName[0]) + characterName.Substring(1);
+        Debug.Log("Character chosen: " + charName);
         
-
         jsonReader = new ReadJson();
         chosenChar = jsonReader.LoadJson(characterName);
         player1.sprite = Resources.Load <Sprite> (characterName);

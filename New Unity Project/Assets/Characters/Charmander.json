@@ -2,7 +2,7 @@
   "HP": 180,
   "ATK": 52,
   "DEF": 43,
-  "SPD": 17,
+  "SPD": 15,
   "TYPE": "Fire",
   "basicAttackNames": ["Scratch","Slash", "Mega Punch"],
   "basicAttackDMG": [40,45,50],

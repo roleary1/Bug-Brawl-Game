@@ -2,7 +2,7 @@
   "HP": 190,
   "ATK": 48,
   "DEF": 65,
-  "SPD": 19,
+  "SPD": 11,
   "TYPE": "Water",
   "basicAttackNames": ["Tackle", "Tail Whip", "Shell Spin"],
   "basicAttackDMG": [40, 45, 47],
