@@ -212,8 +212,11 @@ public class BattleScene : MonoBehaviour
     }
 
     private IEnumerator EndGame() {
-        yield return new WaitForSeconds (4);
-        Destroy(this);
+        yield return new WaitForSeconds (4); 
+        GameObject playerGameObj = GameObject.Find("Player");
+        Destroy(playerGameObj);
+        GameObject enemyGameObj = GameObject.Find("Enemy");
+        Destroy(enemyGameObj);
         SceneManager.LoadScene("MainScene");
     }
 

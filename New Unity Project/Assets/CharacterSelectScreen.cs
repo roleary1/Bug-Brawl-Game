@@ -6,11 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class CharacterSelectScreen : MonoBehaviour
 {
-
     public Button squirtle_button, charmander_button, bulbasaur_button, pikachu_button, jiggly_button, battle_button;
     public ReadJson jsonReader;
     public Image player1;
+    public GameObject playerGameObj;
     public Player playerObj;
+    public GameObject enemyGameObj;
     public AI enemyObj;
     public Text statWindow;
     public string charName;
@@ -33,8 +34,21 @@ public class CharacterSelectScreen : MonoBehaviour
         
     }
 
+    void startNewBattle() {
+        playerGameObj = new GameObject();
+        playerGameObj.AddComponent<Player>();
+        playerGameObj.name = "Player";
+        playerObj = playerGameObj.GetComponent<Player>();
+
+        enemyGameObj = new GameObject();
+        enemyGameObj.AddComponent<AI>();
+        enemyGameObj.name = "Enemy";
+        enemyObj = enemyGameObj.GetComponent<AI>();
+    }
+
     void enterBattle()
     {
+        startNewBattle();
         // Set up the player stats before transitioning
         Debug.Log("Initalizing character " + charName);
         playerObj.initializeStats(charName, chosenChar);
@@ -70,6 +84,4 @@ public class CharacterSelectScreen : MonoBehaviour
 
         statWindow.text = statsToDisplay;
     }
-
-
 }
