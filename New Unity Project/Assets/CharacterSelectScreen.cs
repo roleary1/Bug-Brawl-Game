@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class CharacterSelectScreen : MonoBehaviour
 {
-    public Button squirtle_button, charmander_button, bulbasaur_button, pikachu_button, jiggly_button, battle_button;
+    public Button squirtle_button, charmander_button, bulbasaur_button, pikachu_button, jiggly_button, battle_button, back_button;
     public ReadJson jsonReader;
     public Image player1;
     public GameObject playerGameObj;
@@ -17,6 +17,8 @@ public class CharacterSelectScreen : MonoBehaviour
     public string charName;
     public ReadJson.Character chosenChar;
 
+    public bool selectedCharacter = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,12 +28,17 @@ public class CharacterSelectScreen : MonoBehaviour
         pikachu_button.onClick.AddListener(delegate { selectCharacter("pikachu"); });
         jiggly_button.onClick.AddListener(delegate { selectCharacter("jigglypuff"); });
         battle_button.onClick.AddListener(enterBattle);
+        back_button.onClick.AddListener(backButtonPressed);
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    void backButtonPressed() {
+        SceneManager.LoadScene("StartMenu");
     }
 
     void startNewBattle() {
@@ -48,16 +55,19 @@ public class CharacterSelectScreen : MonoBehaviour
 
     void enterBattle()
     {
-        startNewBattle();
-        // Set up the player stats before transitioning
-        Debug.Log("Initalizing character " + charName);
-        playerObj.initializeStats(charName, chosenChar);
-        enemyObj.setUpAI(playerObj);
-        SceneManager.LoadScene("BattleScene");
+        if(selectedCharacter) {
+            startNewBattle();
+            // Set up the player stats before transitioning
+            Debug.Log("Initalizing character " + charName);
+            playerObj.initializeStats(charName, chosenChar);
+            enemyObj.setUpAI(playerObj);
+            SceneManager.LoadScene("BattleScene");
+        }
     } 
 
     void selectCharacter(string characterName)
     {
+        selectedCharacter = true;
         charName = char.ToUpper(characterName[0]) + characterName.Substring(1);
         Debug.Log("Character chosen: " + charName);
         

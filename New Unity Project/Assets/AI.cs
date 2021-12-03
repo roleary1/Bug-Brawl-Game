@@ -59,11 +59,11 @@ public class AI : Player
                         if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
                             basicDmg *= (int) ((double)ATK/opponent.DEF);
                             basicDmg += 20;
-                            Debug.Log("AI uses basic attack with atk boost item!");
+                            Debug.Log("AI uses basic attack with ATK boost item!");
                             return applyCrit(basicDmg, false);
                         } else {
                             displayText.text += this.name + "missed.\n";
-                            Debug.Log("AI uses basic attack with atk boost item, but missed.");
+                            Debug.Log("AI uses basic attack with ATK boost item, but missed.");
                             return 0;
                         }
                     }
@@ -152,7 +152,7 @@ public class AI : Player
                 //use riskiest, highest dmg special
                 accBoostItems--;
                 lastAttack = specialAttackNames[2];
-                displayText.text += this.name + " used the Accuracy boost item.\n";
+                displayText.text += this.name + " used the accuracy boost item.\n";
                 displayText.text += this.name + " used " + specialAttackNames[2] + ".\n";
                 double newAccuracy = (specialAttackACC[2] * 1.1) - opponent.SPD;
                 if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
@@ -226,7 +226,7 @@ public class AI : Player
             if(!usedItem && accBoostItems > 0) {
                 accBoostItems--;
                 lastAttack = basicAttackNames[2];
-                displayText.text += this.name + " used the Accuracy boost item.\n";
+                displayText.text += this.name + " used the accuracy boost item.\n";
                 
                 newAccuracy *= 1.1;
                 Debug.Log("AI used accuracy boost item!");
@@ -237,7 +237,7 @@ public class AI : Player
                 displayText.text += this.name + " used the ATK boost item.\n";
                 Debug.Log("AI used ATK boost item!");
             } else if(!usedItem && critBoostItems > 0) {
-                displayText.text += this.name + " used the Crit Rate boost item.\n";
+                displayText.text += this.name + " used the crit boost item.\n";
                 critBoost = true;
                 Debug.Log("AI used CRIT boost item!");
             }

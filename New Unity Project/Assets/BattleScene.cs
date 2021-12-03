@@ -30,6 +30,8 @@ public class BattleScene : MonoBehaviour
     public bool accBoost = false;
     public bool critBoost = false;
 
+    public bool enemyDecidingMove = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -112,71 +114,74 @@ public class BattleScene : MonoBehaviour
         // apply AI dmg to player
         // check if we died
         // reset the AI and player stats to base stats, reset usedItem
-        displayText.text = "";
-        Debug.Log("Our Turn:");
-        int totalDmg = 0;
-        if(attack < 3) {
-            Debug.Log("Basic Attack " + attack);
-            displayText.text += "" + player.name + " used " + player.basicAttackNames[attack] + ".\n";
-            int newAccuracy = player.basicAttackACC[attack];
-            if(accBoost) {
-                newAccuracy = (int)(newAccuracy * 1.1);
-            }
-            newAccuracy -= enemy.SPD;
-            if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
-                totalDmg = (int) (player.basicAttackDMG[attack] * ((double)player.ATK/enemy.DEF));
-                if(critBoost) {
-                    totalDmg = player.applyCrit(totalDmg, true);
+        if(!enemyDecidingMove) {
+            displayText.text = "";
+            Debug.Log("Our Turn:");
+            int totalDmg = 0;
+            if(attack < 3) {
+                Debug.Log("Basic Attack " + attack);
+                displayText.text += "" + player.name + " used " + player.basicAttackNames[attack] + ".\n";
+                int newAccuracy = player.basicAttackACC[attack];
+                if(accBoost) {
+                    newAccuracy = (int)(newAccuracy * 1.1);
+                }
+                newAccuracy -= enemy.SPD;
+                if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
+                    totalDmg = (int) (player.basicAttackDMG[attack] * ((double)player.ATK/enemy.DEF));
+                    if(critBoost) {
+                        totalDmg = player.applyCrit(totalDmg, true);
+                    } else {
+                        totalDmg = player.applyCrit(totalDmg, false);
+                    }
                 } else {
-                    totalDmg = player.applyCrit(totalDmg, false);
+                    displayText.text += "" + player.basicAttackNames[attack] + " missed :(\n";
+                    Debug.Log("We missed :(");
                 }
             } else {
-                displayText.text += "" + player.basicAttackNames[attack] + " missed :(\n";
-                Debug.Log("We missed :(");
-            }
-        } else {
-            attack -= 3;
-            Debug.Log("Special Attack " + attack);
-            displayText.text += "" + player.name + " used " + player.specialAttackNames[attack] + ".\n";
-            int newAccuracy = player.specialAttackACC[attack];
-            if(accBoost) {
-                newAccuracy = (int)(newAccuracy * 1.1);
-            }
-            newAccuracy -= enemy.SPD;
-            if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
-                totalDmg = (int) (player.specialAttackDMG[attack] * ((double)player.ATK/enemy.DEF));
-                if(Array.IndexOf(player.effectiveTypes[player.TYPE], enemy.TYPE) != -1) {
-                    displayText.text += "It's super effective!\n";
-                    totalDmg = (int) (totalDmg * player.effectiveMultiplier);
+                attack -= 3;
+                Debug.Log("Special Attack " + attack);
+                displayText.text += "" + player.name + " used " + player.specialAttackNames[attack] + ".\n";
+                int newAccuracy = player.specialAttackACC[attack];
+                if(accBoost) {
+                    newAccuracy = (int)(newAccuracy * 1.1);
                 }
-                if(Array.IndexOf(player.vulnerableTypes[player.TYPE], enemy.TYPE) != -1) {
-                    displayText.text += "It's not very effective.\n";
-                    totalDmg = (int) (totalDmg * player.ineffectiveMultiplier);
-                }
-                if(critBoost) {
-                    totalDmg = player.applyCrit(totalDmg, true);
+                newAccuracy -= enemy.SPD;
+                if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
+                    totalDmg = (int) (player.specialAttackDMG[attack] * ((double)player.ATK/enemy.DEF));
+                    if(Array.IndexOf(player.effectiveTypes[player.TYPE], enemy.TYPE) != -1) {
+                        displayText.text += "It's super effective!\n";
+                        totalDmg = (int) (totalDmg * player.effectiveMultiplier);
+                    }
+                    if(Array.IndexOf(player.vulnerableTypes[player.TYPE], enemy.TYPE) != -1) {
+                        displayText.text += "It's not very effective.\n";
+                        totalDmg = (int) (totalDmg * player.ineffectiveMultiplier);
+                    }
+                    if(critBoost) {
+                        totalDmg = player.applyCrit(totalDmg, true);
+                    } else {
+                        totalDmg = player.applyCrit(totalDmg, false);
+                    }
                 } else {
-                    totalDmg = player.applyCrit(totalDmg, false);
+                    displayText.text += "" + player.specialAttackNames[attack] + " missed :(\n";
+                    Debug.Log("We missed :(");
                 }
-            } else {
-                displayText.text += "" + player.specialAttackNames[attack] + " missed :(\n";
-                Debug.Log("We missed :(");
             }
-        }
         
-        Debug.Log("Apply Player Damage: " + totalDmg);
-        displayText.text += player.name + " dealt " + totalDmg + " damage!\n";
-        enemy.HP -= totalDmg;
-        enemy.HP = Math.Max(enemy.HP, 0);
-        enemyHP.text = "HP: " + enemy.HP;
-        if(enemy.HP == 0) {
-            // we killed the enemy with our attack
-            // print we won, change scene to wining screen
-            Debug.Log("We KOed the Enemy!");
-            displayText.text = "We win!";
-            StartCoroutine(EndGame());
-        } else {
-            StartCoroutine(EnemyMove());
+            Debug.Log("Apply Player Damage: " + totalDmg);
+            displayText.text += player.name + " dealt " + totalDmg + " damage!\n";
+            enemy.HP -= totalDmg;
+            enemy.HP = Math.Max(enemy.HP, 0);
+            enemyHP.text = "HP: " + enemy.HP;
+            if(enemy.HP == 0) {
+                // we killed the enemy with our attack
+                // print we won, change scene to wining screen
+                Debug.Log("We KOed the Enemy!");
+                displayText.text += "We win!";
+                StartCoroutine(EndGame());
+            } else {
+                enemyDecidingMove = true;
+                StartCoroutine(EnemyMove());
+            }
         }
     }
 
@@ -192,7 +197,7 @@ public class BattleScene : MonoBehaviour
         player.HP = Math.Max(0, player.HP);
         playerHP.text = "HP: " + player.HP;
         if(player.HP == 0) {
-            displayText.text = "We lose. :(";
+            displayText.text += "We lose. :(";
             Debug.Log("Enemy KOed us :(");
             // we died, take us to lose screen
             StartCoroutine(EndGame());
@@ -209,6 +214,8 @@ public class BattleScene : MonoBehaviour
         enemy.DEF = enemy.baseDEF;
         enemy.SPD = enemy.baseSPD;
         enemy.ATK = enemy.baseATK;
+
+        enemyDecidingMove = false;
     }
 
     private IEnumerator EndGame() {
@@ -272,7 +279,7 @@ public class BattleScene : MonoBehaviour
                 if(player.accBoostItems > 0 && !usedItem) {
                     player.accBoostItems--;
                     accBoost = true;
-                    displayText.text = "Used accuracy boost item!\n";
+                    displayText.text = "Used accuracy item!\n";
                     Debug.Log("Used ACC boost");
                     item5.GetComponentInChildren<Text>().text = "ACC: " + player.accBoostItems;
                 }
@@ -282,7 +289,7 @@ public class BattleScene : MonoBehaviour
                 if(player.critBoostItems > 0 && !usedItem) {
                     player.critBoostItems--;
                     critBoost = true;
-                    displayText.text = "Used crit rate boost item!\n";
+                    displayText.text = "Used crit boost item!\n";
                     Debug.Log("Used Crit boost");
                     item6.GetComponentInChildren<Text>().text = "Crit: " + player.critBoostItems;
                 }
