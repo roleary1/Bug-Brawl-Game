@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class CharacterSelectScreen : MonoBehaviour
 {
-    public Button squirtle_button, charmander_button, bulbasaur_button, pikachu_button, jiggly_button, battle_button, back_button;
+    public Button wet_noodle_button, charmander_button, bulbasaur_button, recursive_snail_button, jiggly_button, battle_button, back_button;
     public ReadJson jsonReader;
     public Image player1;
     public GameObject playerGameObj;
@@ -14,7 +14,7 @@ public class CharacterSelectScreen : MonoBehaviour
     public GameObject enemyGameObj;
     public AI enemyObj;
     public Text statWindow;
-    public string charName;
+    public string globalCharName;
     public ReadJson.Character chosenChar;
 
     public bool selectedCharacter = false;
@@ -22,10 +22,10 @@ public class CharacterSelectScreen : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        squirtle_button.onClick.AddListener(delegate { selectCharacter("squirtle"); });
+        wet_noodle_button.onClick.AddListener(delegate { selectCharacter("wet_noodle"); });
         charmander_button.onClick.AddListener(delegate { selectCharacter("charmander"); });
         bulbasaur_button.onClick.AddListener(delegate { selectCharacter("bulbasaur"); });
-        pikachu_button.onClick.AddListener(delegate { selectCharacter("pikachu"); });
+        recursive_snail_button.onClick.AddListener(delegate { selectCharacter("recursive_snail"); });
         jiggly_button.onClick.AddListener(delegate { selectCharacter("jigglypuff"); });
         battle_button.onClick.AddListener(enterBattle);
         back_button.onClick.AddListener(backButtonPressed);
@@ -58,8 +58,8 @@ public class CharacterSelectScreen : MonoBehaviour
         if(selectedCharacter) {
             startNewBattle();
             // Set up the player stats before transitioning
-            Debug.Log("Initalizing character " + charName);
-            playerObj.initializeStats(charName, chosenChar);
+            Debug.Log("Initalizing character " + globalCharName);
+            playerObj.initializeStats(globalCharName, chosenChar);
             enemyObj.setUpAI(playerObj);
             SceneManager.LoadScene("BattleScene");
         }
@@ -67,15 +67,34 @@ public class CharacterSelectScreen : MonoBehaviour
 
     void selectCharacter(string characterName)
     {
+        string[] characterNames = new string[] { "Recursive Snail", "Wet Noodle", "Bulbasaur", "JigglyPuff", "Charmander" };
+        // string charName = "";
+        globalCharName = characterName;
+        switch (characterName) {
+            case "wet_noodle":
+                globalCharName = characterNames[1];
+                break;
+            case "recursive_snail":
+                globalCharName = characterNames[0];
+                break;
+            case "bulbasaur":
+                globalCharName = characterNames[2];
+                break;
+            case "jigglypuff":
+                globalCharName = characterNames[3];
+                break;
+            case "charmander":
+                globalCharName = characterNames[4];
+                break;
+        }
         selectedCharacter = true;
-        charName = char.ToUpper(characterName[0]) + characterName.Substring(1);
-        Debug.Log("Character chosen: " + charName);
+        Debug.Log("Character chosen: " + globalCharName);
         
         jsonReader = new ReadJson();
         chosenChar = jsonReader.LoadJson(characterName);
         player1.sprite = Resources.Load <Sprite> (characterName);
 
-        string statsToDisplay = "" + char.ToUpper(characterName[0]) + characterName.Substring(1) + " Stats: \n" +
+        string statsToDisplay = "" + globalCharName + " Stats: \n" +
                                 "HP: " + chosenChar.HP + ", " +
                                 "ATK: " + chosenChar.ATK + ", " +
                                 "DEF: " + chosenChar.DEF + ", " +

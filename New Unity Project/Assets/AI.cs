@@ -7,18 +7,24 @@ public class AI : Player
 {
     public Player opponent;
     public string lastAttack;
+    public string[] characterNames;
+    public string[] characterFileNames;
 
     void Start()
     {
-       
+        
     }
 
-    public void setUpAI(Player opponent) {
-        // TODO: change charmander to different pokemon
-        string defaultEnemy = "charmander";
+    public void setUpAI(Player opponent) {  
+        Debug.Log("Inside setup AI");
+        characterFileNames = new string[] { "recursive_snail", "wet_noodle", "bulbasaur", "jigglypuff", "charmander" };
+        characterNames = new string[] { "Recursive Snail", "Wet Noodle", "Bulbasaur", "JigglyPuff", "Charmander" };    
+        int index = UnityEngine.Random.Range(0,5);
         ReadJson jsonReader = new ReadJson();
-        ReadJson.Character chosenChar = jsonReader.LoadJson(defaultEnemy);
-        initializeStats("Charmander", chosenChar);
+        Debug.Log("Loading AI " + characterFileNames[index]);
+        ReadJson.Character chosenChar = jsonReader.LoadJson(characterFileNames[index]);
+        Debug.Log("Chosen AI name: " + characterNames[index]);
+        initializeStats(characterNames[index], chosenChar);
         this.opponent = opponent;
     }
 
@@ -35,10 +41,10 @@ public class AI : Player
                 // Perform KO attack
                 bool usedItem = applyHPDEFSPD();
                 for(int i = 0; i < 3; i++) {
-                    int basicDmg = basicAttackDMG[i];
+                    double basicDmg = basicAttackDMG[i];
                     if(basicDmg >= opponent.HP) {
                         //use basic
-                        basicDmg *= (int) ((double)ATK/opponent.DEF);
+                        basicDmg *= ((double)ATK/opponent.DEF);
                         double newAccuracy = basicAttackACC[i] - opponent.SPD;
                         displayText.text += this.name + " used " + basicAttackNames[i] + ".\n";
                         if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
@@ -57,7 +63,7 @@ public class AI : Player
                         
                         double newAccuracy = basicAttackACC[i] - opponent.SPD;
                         if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
-                            basicDmg *= (int) ((double)ATK/opponent.DEF);
+                            basicDmg *= ((double)ATK/opponent.DEF);
                             basicDmg += 20;
                             Debug.Log("AI uses basic attack with ATK boost item!");
                             return applyCrit(basicDmg, false);
@@ -67,18 +73,18 @@ public class AI : Player
                             return 0;
                         }
                     }
-                    int specialDmg = specialAttackDMG[i];
+                    double specialDmg = specialAttackDMG[i];
                     bool effective = true;
                     if(Array.IndexOf(effectiveTypes[TYPE], opponent.TYPE) != -1) {
-                        specialDmg = (int) (specialDmg * effectiveMultiplier);
+                        specialDmg = (specialDmg * effectiveMultiplier);
                     } else if(Array.IndexOf(vulnerableTypes[TYPE], opponent.TYPE) != -1) {
                         effective = false;
-                        specialDmg *= (int) (specialDmg * ineffectiveMultiplier);
+                        specialDmg *= (specialDmg * ineffectiveMultiplier);
                     }
 
                     if(specialDmg >= opponent.HP) {
                         //use special
-                        specialDmg *= (int) ((double)ATK/opponent.DEF);
+                        specialDmg *= ((double)ATK/opponent.DEF);
                         displayText.text += this.name + " used " + specialAttackNames[i] + "!\n";
                         if(effective) {
                             displayText.text += "It's super effective!\n";
@@ -94,8 +100,8 @@ public class AI : Player
                         
                         double newAccuracy = specialAttackACC[i] - opponent.SPD;
                         if(UnityEngine.Random.Range(0,101) <= newAccuracy) {
-                            specialDmg *= (int) ((double)ATK/opponent.DEF);
-                            specialDmg += 20;
+                            specialDmg *= ((double)ATK/opponent.DEF);
+                            specialDmg += 20.0;
                             Debug.Log("AI uses special attack!");
                             return applyCrit(specialDmg, false);
                         } else {

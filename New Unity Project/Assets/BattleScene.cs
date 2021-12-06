@@ -20,6 +20,10 @@ public class BattleScene : MonoBehaviour
     public Text enemyHP;
     public Image playerImage;
     public Image enemyImage;
+
+    public Animator playerAnimation;
+    public Animator enemyAnimation;
+
     public Player player;
 
     public Text displayText;
@@ -82,6 +86,10 @@ public class BattleScene : MonoBehaviour
 
         playerImage.sprite = Resources.Load <Sprite> (player.name);
         enemyImage.sprite = Resources.Load <Sprite> (enemy.name);
+
+        playerAnimation = playerImage.GetComponent<Animator>();
+        enemyAnimation = enemyImage.GetComponent<Animator>();
+        enemyAnimation.transform.Rotate(0, 180, 0);
         
         basicAttack1.onClick.AddListener(delegate { executeAttack(0); });
         basicAttack2.onClick.AddListener(delegate { executeAttack(1); });
@@ -238,7 +246,7 @@ public class BattleScene : MonoBehaviour
                         heal += 20;
                     }
                     player.HP = Math.Min(player.maxHP, player.HP + heal);
-                    item1.GetComponentInChildren<Text>().text = "Heal: " + player.healItems;
+                    item1.GetComponentInChildren<Text>().text = "Morphine: " + player.healItems;
                     Debug.Log("Used heal: HP is now "+ player.HP);
                     displayText.text = "Used heal item!\n";
                     playerHP.text = "HP: "+ player.HP;
@@ -249,7 +257,7 @@ public class BattleScene : MonoBehaviour
                 if(player.defBoostItems > 0 && !usedItem) {
                     player.defBoostItems--;
                     player.DEF += 25;
-                    item2.GetComponentInChildren<Text>().text = "DEF: " + player.defBoostItems;
+                    item2.GetComponentInChildren<Text>().text = "Kevlar Vest: " + player.defBoostItems;
                     Debug.Log("Used DEF boost: DEF is now " + player.DEF);
                     displayText.text = "Used DEF boost item!\n";
                 }
@@ -259,7 +267,7 @@ public class BattleScene : MonoBehaviour
                 if(player.spdBoostItems > 0 && !usedItem) {
                     player.spdBoostItems--;
                     player.SPD += 10;
-                    item3.GetComponentInChildren<Text>().text = "SPD: " + player.spdBoostItems;
+                    item3.GetComponentInChildren<Text>().text = "Redbull: " + player.spdBoostItems;
                     displayText.text = "Used SPD item!\n";
                     Debug.Log("Used SPD boost: SPD is now " + player.SPD);
                 }
@@ -269,7 +277,7 @@ public class BattleScene : MonoBehaviour
                 if(player.atkBoostItems > 0 && !usedItem) {
                     player.atkBoostItems--;
                     player.ATK += 20;
-                    item4.GetComponentInChildren<Text>().text = "ATK: " + player.atkBoostItems;
+                    item4.GetComponentInChildren<Text>().text = "Iron Knuckles: " + player.atkBoostItems;
                     displayText.text = "Used ATK boost item!\n";
                     Debug.Log("Used ATK boost: ATK is now "+ player.ATK);
                 }
@@ -280,8 +288,8 @@ public class BattleScene : MonoBehaviour
                     player.accBoostItems--;
                     accBoost = true;
                     displayText.text = "Used accuracy item!\n";
-                    Debug.Log("Used ACC boost");
-                    item5.GetComponentInChildren<Text>().text = "ACC: " + player.accBoostItems;
+                    Debug.Log("Used ACC boost item");
+                    item5.GetComponentInChildren<Text>().text = "Glasses: " + player.accBoostItems;
                 }
                 break;
             case 5:
@@ -291,7 +299,7 @@ public class BattleScene : MonoBehaviour
                     critBoost = true;
                     displayText.text = "Used crit boost item!\n";
                     Debug.Log("Used Crit boost");
-                    item6.GetComponentInChildren<Text>().text = "Crit: " + player.critBoostItems;
+                    item6.GetComponentInChildren<Text>().text = "Rabbit Foot: " + player.critBoostItems;
                 }
                 break;
         }

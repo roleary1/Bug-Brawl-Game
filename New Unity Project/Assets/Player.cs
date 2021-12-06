@@ -93,7 +93,7 @@ public class Player : MonoBehaviour
         this.specialAttackACC = charStats.specialAttackACC;
     }
 
-    public int applyCrit(int currentDmg, bool usedCritItem) {
+    public int applyCrit(double currentDmg, bool usedCritItem) {
         int critPercent = 10;
         if(usedCritItem) {
             critPercent += 5;
@@ -103,7 +103,7 @@ public class Player : MonoBehaviour
             Debug.Log("Critical hit!!");
             return (int) (currentDmg * 1.5);
         } else {
-            return currentDmg;
+            return (int) currentDmg;
         }
     }
 }

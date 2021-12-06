@@ -1,0 +1,13 @@
+{
+  "HP": 190,
+  "ATK": 48,
+  "DEF": 65,
+  "SPD": 6,
+  "TYPE": "Water",
+  "basicAttackNames": ["Slap", "Tail Whip", "Noodle Spin"],
+  "basicAttackDMG": [40, 45, 47],
+  "basicAttackACC": [100, 85, 65],
+  "specialAttackNames": ["Spit", "Waterfall", "Aqua Dragon"],
+  "specialAttackDMG": [45, 48, 52],
+  "specialAttackACC": [100, 80, 50]
+}

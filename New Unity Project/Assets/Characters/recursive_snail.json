@@ -1,0 +1,13 @@
+{
+  "HP": 185,
+  "ATK": 50,
+  "DEF": 50,
+  "SPD": 7,
+  "TYPE": "Electric",
+  "basicAttackNames": ["Slime", "Shell Whack", "Recursive Flurry"],
+  "basicAttackDMG": [41,46,48],
+  "basicAttackACC": [100,83,67],
+  "specialAttackNames": ["Thunder Strike", "Electro Spin", "Spark"],
+  "specialAttackDMG": [43,47,50],
+  "specialAttackACC": [100,80,65]
+}
