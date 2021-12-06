@@ -343,6 +343,7 @@
 "Assets/Json reader/ReadJson.cs"
 "Assets/Player.cs"
 "Assets/Program.cs"
+"Assets/StartMenu.cs"
 -langversion:9.0
 
 /deterministic
