@@ -17,8 +17,8 @@ public class AI : Player
 
     public void setUpAI(Player opponent) {  
         Debug.Log("Inside setup AI");
-        characterFileNames = new string[] { "recursive_snail", "wet_noodle", "bulbasaur", "jigglypuff", "charmander" };
-        characterNames = new string[] { "Recursive Snail", "Wet Noodle", "Bulbasaur", "JigglyPuff", "Charmander" };    
+        characterFileNames = new string[] { "recursive_snail", "wet_noodle", "joe", "gumdrop", "firefox" };
+        characterNames = new string[] { "Recursive Snail", "Wet Noodle", "Joe", "Gumdrop", "Firefox" };    
         int index = UnityEngine.Random.Range(0,5);
         ReadJson jsonReader = new ReadJson();
         Debug.Log("Loading AI " + characterFileNames[index]);

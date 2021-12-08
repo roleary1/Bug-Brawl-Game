@@ -59,6 +59,9 @@ public class BattleScene : MonoBehaviour
         } else {
             Debug.Log("Enemy game obj was null");
         }
+        // set up animation
+
+
         player.setUpDict(displayText);
         enemy.setUpDict(displayText);
         
@@ -88,8 +91,47 @@ public class BattleScene : MonoBehaviour
         enemyImage.sprite = Resources.Load <Sprite> (enemy.name);
 
         playerAnimation = playerImage.GetComponent<Animator>();
+        switch (player.name) {
+            case "Wet Noodle":
+                playerAnimation.Play("wet_noodle");
+                break;
+            case "Recursive Snail":
+                playerAnimation.Play("recursive_snail");
+                break;
+            case "Joe":
+                playerAnimation.Play("joe");
+                break;
+            case "Gumdrop":
+                playerAnimation.Play("gumdrop");
+                break;
+            case "Firefox":
+                playerAnimation.Play("firefox");
+                break;
+        }
+        if(player.name == "Firefox") {
+            playerAnimation.transform.Rotate(0, 180, 0);
+        }
         enemyAnimation = enemyImage.GetComponent<Animator>();
-        enemyAnimation.transform.Rotate(0, 180, 0);
+        switch (enemy.name) {
+            case "Wet Noodle":
+                enemyAnimation.Play("wet_noodle");
+                break;
+            case "Recursive Snail":
+                enemyAnimation.Play("recursive_snail");
+                break;
+            case "Joe":
+                playerAnimation.Play("joe");
+                break;
+            case "Gumdrop":
+                enemyAnimation.Play("gumdrop");
+                break;
+            case "Firefox":
+                playerAnimation.Play("firefox");
+                break;
+        }
+        if(enemy.name != "Firefox") {
+            enemyAnimation.transform.Rotate(0, 180, 0);
+        }
         
         basicAttack1.onClick.AddListener(delegate { executeAttack(0); });
         basicAttack2.onClick.AddListener(delegate { executeAttack(1); });

@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class CharacterSelectScreen : MonoBehaviour
 {
-    public Button wet_noodle_button, charmander_button, bulbasaur_button, recursive_snail_button, jiggly_button, battle_button, back_button;
+    public Button wet_noodle_button, firefox_button, joe_button, recursive_snail_button, gumdrop_button, battle_button, back_button;
     public ReadJson jsonReader;
     public Image player1;
     public GameObject playerGameObj;
@@ -23,10 +23,10 @@ public class CharacterSelectScreen : MonoBehaviour
     void Start()
     {
         wet_noodle_button.onClick.AddListener(delegate { selectCharacter("wet_noodle"); });
-        charmander_button.onClick.AddListener(delegate { selectCharacter("charmander"); });
-        bulbasaur_button.onClick.AddListener(delegate { selectCharacter("bulbasaur"); });
+        firefox_button.onClick.AddListener(delegate { selectCharacter("firefox"); });
+        joe_button.onClick.AddListener(delegate { selectCharacter("joe"); });
         recursive_snail_button.onClick.AddListener(delegate { selectCharacter("recursive_snail"); });
-        jiggly_button.onClick.AddListener(delegate { selectCharacter("jigglypuff"); });
+        gumdrop_button.onClick.AddListener(delegate { selectCharacter("gumdrop"); });
         battle_button.onClick.AddListener(enterBattle);
         back_button.onClick.AddListener(backButtonPressed);
     }
@@ -67,7 +67,7 @@ public class CharacterSelectScreen : MonoBehaviour
 
     void selectCharacter(string characterName)
     {
-        string[] characterNames = new string[] { "Recursive Snail", "Wet Noodle", "Bulbasaur", "JigglyPuff", "Charmander" };
+        string[] characterNames = new string[] { "Recursive Snail", "Wet Noodle", "Joe", "Gumdrop", "Firefox" };
         // string charName = "";
         globalCharName = characterName;
         switch (characterName) {
@@ -77,13 +77,13 @@ public class CharacterSelectScreen : MonoBehaviour
             case "recursive_snail":
                 globalCharName = characterNames[0];
                 break;
-            case "bulbasaur":
+            case "joe":
                 globalCharName = characterNames[2];
                 break;
-            case "jigglypuff":
+            case "gumdrop":
                 globalCharName = characterNames[3];
                 break;
-            case "charmander":
+            case "firefox":
                 globalCharName = characterNames[4];
                 break;
         }

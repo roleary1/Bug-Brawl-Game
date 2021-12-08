@@ -1,0 +1,13 @@
+{
+  "HP": 195,
+  "ATK": 49,
+  "DEF": 49,
+  "SPD": 8,
+  "TYPE": "Grass",
+  "basicAttackNames": ["Tackle", "Hoot 'n Holler", "Orango-Slam"],
+  "basicAttackDMG": [40, 45, 47],
+  "basicAttackACC": [100, 85, 65],
+  "specialAttackNames": ["Branch Whip", "Mango Throw", "Jungle Storm"],
+  "specialAttackDMG": [45, 48, 50],
+  "specialAttackACC": [100, 80, 65]
+}
