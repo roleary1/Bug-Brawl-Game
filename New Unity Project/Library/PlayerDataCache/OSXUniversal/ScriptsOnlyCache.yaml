@@ -9,11 +9,8 @@ ScriptsOnlyBuild:
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.AnimatorTransitionInspector
-    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.StateNode
     - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
@@ -56,21 +53,21 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1552}
+      Script: {instanceID: 1554}
     - Class: 114
-      Script: {instanceID: 2534}
+      Script: {instanceID: 2550}
     - Class: 114
-      Script: {instanceID: 2734}
+      Script: {instanceID: 2750}
     - Class: 114
-      Script: {instanceID: 3004}
+      Script: {instanceID: 3022}
     - Class: 114
-      Script: {instanceID: 3076}
+      Script: {instanceID: 3094}
     - Class: 114
-      Script: {instanceID: 5166}
+      Script: {instanceID: 5206}
     - Class: 114
-      Script: {instanceID: 5460}
+      Script: {instanceID: 5502}
     - Class: 114
-      Script: {instanceID: 5918}
+      Script: {instanceID: 5974}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -109,21 +106,21 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1552}
+      Script: {instanceID: 1554}
     - Class: 114
-      Script: {instanceID: 1894}
+      Script: {instanceID: 1896}
     - Class: 114
-      Script: {instanceID: 2534}
+      Script: {instanceID: 2550}
     - Class: 114
-      Script: {instanceID: 2734}
+      Script: {instanceID: 2750}
     - Class: 114
-      Script: {instanceID: 3004}
+      Script: {instanceID: 3022}
     - Class: 114
-      Script: {instanceID: 5166}
+      Script: {instanceID: 5206}
     - Class: 114
-      Script: {instanceID: 5460}
+      Script: {instanceID: 5502}
     - Class: 114
-      Script: {instanceID: 5918}
+      Script: {instanceID: 5974}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -166,21 +163,21 @@ ScriptsOnlyBuild:
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 1552}
+      Script: {instanceID: 1554}
     - Class: 114
-      Script: {instanceID: 2534}
+      Script: {instanceID: 2550}
     - Class: 114
-      Script: {instanceID: 2734}
+      Script: {instanceID: 2750}
     - Class: 114
-      Script: {instanceID: 3004}
+      Script: {instanceID: 3022}
     - Class: 114
-      Script: {instanceID: 5166}
+      Script: {instanceID: 5206}
     - Class: 114
-      Script: {instanceID: 5460}
+      Script: {instanceID: 5502}
     - Class: 114
-      Script: {instanceID: 5552}
+      Script: {instanceID: 5596}
     - Class: 114
-      Script: {instanceID: 5918}
+      Script: {instanceID: 5974}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -1007,4 +1004,4 @@ ScriptsOnlyBuild:
   - Assets/StartMenu.unity
   - Assets/MainScene.unity
   - Assets/BattleScene.unity
-  playerPath: /Users/debbiewong/Desktop/bugbrawl.app
+  playerPath: /Users/fernandomerc/Desktop/bugbrawl.app

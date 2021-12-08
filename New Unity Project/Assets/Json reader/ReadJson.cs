@@ -18,7 +18,9 @@ public class ReadJson
 
     public Character LoadJson(string name)
     {
-        using (StreamReader r = new StreamReader("Assets/Characters/" + name + ".json"))
+        //"Assets/Characters/" + name + ".json"
+        // using (StreamReader r = new StreamReader("Assets/StreamingAssets/" + name + ".json"))
+        using (StreamReader r = new StreamReader(Application.dataPath + "/Resources/Data/StreamingAssets/" + name + ".json"))
         {
             string json = r.ReadToEnd();
             Character character = JsonUtility.FromJson<Character>(json);

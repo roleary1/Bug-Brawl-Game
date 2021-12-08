@@ -59,9 +59,7 @@ public class BattleScene : MonoBehaviour
         } else {
             Debug.Log("Enemy game obj was null");
         }
-        // set up animation
-
-
+        
         player.setUpDict(displayText);
         enemy.setUpDict(displayText);
         
@@ -93,43 +91,55 @@ public class BattleScene : MonoBehaviour
         playerAnimation = playerImage.GetComponent<Animator>();
         switch (player.name) {
             case "Wet Noodle":
+                Debug.Log("WET NOODLE ANIMATION");
                 playerAnimation.Play("wet_noodle");
                 break;
             case "Recursive Snail":
+                Debug.Log("RECURSIVE SNAIL ANIMATION");
                 playerAnimation.Play("recursive_snail");
                 break;
             case "Joe":
+                Debug.Log("JOE ANIMATION");
                 playerAnimation.Play("joe");
                 break;
             case "Gumdrop":
+                Debug.Log("GUMDROP ANIMATION");
                 playerAnimation.Play("gumdrop");
                 break;
             case "Firefox":
+                Debug.Log("FIREFOX ANIMATION");
                 playerAnimation.Play("firefox");
                 break;
         }
         if(player.name == "Firefox") {
+            Debug.Log("PLAYER IS FIREFOX, FLIPPING ANIM");
             playerAnimation.transform.Rotate(0, 180, 0);
         }
         enemyAnimation = enemyImage.GetComponent<Animator>();
         switch (enemy.name) {
             case "Wet Noodle":
+                Debug.Log("ENEMY WET NOODLE ANIM");
                 enemyAnimation.Play("wet_noodle");
                 break;
             case "Recursive Snail":
+            Debug.Log("ENEMY SNAIL ANIM");
                 enemyAnimation.Play("recursive_snail");
                 break;
             case "Joe":
-                playerAnimation.Play("joe");
+            Debug.Log("ENEMY JOE ANIM");
+                enemyAnimation.Play("joe");
                 break;
             case "Gumdrop":
+            Debug.Log("ENEMY GUM ANIM");
                 enemyAnimation.Play("gumdrop");
                 break;
             case "Firefox":
-                playerAnimation.Play("firefox");
+            Debug.Log("ENEMY FOX ANIM");
+                enemyAnimation.Play("firefox");
                 break;
         }
         if(enemy.name != "Firefox") {
+            Debug.Log("ENEMY IS FIREFOX, DON'T FLIP ANIM");
             enemyAnimation.transform.Rotate(0, 180, 0);
         }
         
@@ -139,7 +149,6 @@ public class BattleScene : MonoBehaviour
         specialAttack1.onClick.AddListener(delegate { executeAttack(3); });
         specialAttack2.onClick.AddListener(delegate { executeAttack(4); });
         specialAttack3.onClick.AddListener(delegate { executeAttack(5); });
-
 
         attackWindowButton.onClick.AddListener(delegate { changeTab("attack"); });
         itemWindowButton.onClick.AddListener(delegate { changeTab("items"); });
